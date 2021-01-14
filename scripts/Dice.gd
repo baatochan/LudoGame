@@ -1,5 +1,7 @@
 extends Sprite
 
+var diceResult = 1
+var isRolling = false;
 
 var diceSideSprites = [
 	preload("res://sprites/dice/side1.png"),
@@ -17,9 +19,26 @@ func _ready():
 	var randomSide = randi() % 6 # rand int, range [0, 5]
 
 	set_texture(diceSideSprites[randomSide])
+	diceResult = randomSide + 1
 	pass # Replace with function body.
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(_delta):
-#	pass
+func _process(_delta):
+	if Input.is_action_just_pressed("ui_select"):
+		if not isRolling:
+			isRolling = true
+			roll_dice()
+	pass
+
+
+func roll_dice():
+	var randomSide = 0
+	for _i in range(20):
+		randomSide = randi() % 6 # rand int, range [0, 5]
+		set_texture(diceSideSprites[randomSide])
+		yield(get_tree().create_timer(0.05), "timeout")
+
+	diceResult = randomSide + 1
+	isRolling = false
+	pass
