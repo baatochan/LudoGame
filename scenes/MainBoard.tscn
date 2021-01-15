@@ -10,7 +10,7 @@
 script = ExtResource( 2 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
-offset = Vector2( 960, 540 )
+position = Vector2( 960, 540 )
 current = true
 
 [node name="Background" type="Control" parent="."]
