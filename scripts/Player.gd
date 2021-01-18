@@ -1,8 +1,9 @@
 extends Node
 
 # scripts with consts
-var PLAYER_HOME_POSITIONS = preload("res://consts/PLAYER_HOME_POSITIONS.gd")
+var PLAYER_HOME_CORDS = preload("res://consts/PLAYER_HOME_CORDS.gd")
 var PLAYER_COLORS = preload("res://consts/PLAYER_COLORS.gd")
+var PLAYER_START_POSITIONS = preload("res://consts/PLAYER_START_POSITIONS.gd")
 
 var id
 var pawns = [] # array of pawns (filled during aspawn pawns)
@@ -23,10 +24,11 @@ func spawnPawns():
 		pawnNode.script = playerScript
 		pawnNode.pawnId = pawnId
 		pawnNode.playerId = id
-		pawnNode.position = PLAYER_HOME_POSITIONS.value[id][pawnId]
-		pawnNode.homePosition = PLAYER_HOME_POSITIONS.value[id][pawnId]
+		pawnNode.position = PLAYER_HOME_CORDS.value[id][pawnId]
+		pawnNode.homePositionCords = PLAYER_HOME_CORDS.value[id][pawnId]
 		pawnNode.texture = preload("res://sprites/Player.svg")
 		pawnNode.modulate = PLAYER_COLORS.pawnsColors[id]
+		pawnNode.startPosition = PLAYER_START_POSITIONS.value[id]
 		# add this sprite to the array
 		pawns.append(pawnNode)
 		# add this sprite to the tree (show it)
