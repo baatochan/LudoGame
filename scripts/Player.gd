@@ -6,7 +6,6 @@ var pawns = [] # array of pawns (filled during aspawn pawns)
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	spawnPawns()
-	pass
 
 # add player's pawns to the scene tree
 func spawnPawns():
@@ -28,7 +27,6 @@ func spawnPawns():
 		pawns.append(pawnNode)
 		# add this sprite to the tree (show it)
 		add_child(pawns[pawnId])
-	pass
 
 func areAllPawnsHome():
 	var val = true

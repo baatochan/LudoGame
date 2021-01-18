@@ -13,7 +13,6 @@ var diceResult
 func _ready():
 	playerPositions.resize(40) # fill array of player positions with nulls
 	spawnPlayers()
-	pass
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -58,7 +57,6 @@ func spawnPlayers():
 		players.append(playerNode)
 		# add this node to the tree (show it)
 		add_child(players[playerId])
-	pass
 
 func rollDice():
 	isDiceRolling = true

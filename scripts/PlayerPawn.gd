@@ -7,9 +7,6 @@ var currentPosition = null
 var startPosition
 var distanceFromStart = 0
 
-func _ready():
-	pass
-
 func move(var numberOfFieldsToMove):
 	if (currentPosition == null):
 		if (numberOfFieldsToMove == 6):
@@ -35,7 +32,6 @@ func sendToHome():
 	currentPosition = null
 	distanceFromStart = 0
 	position = homePositionCords
-	pass
 
 func isPawnHome():
 	return (currentPosition == null)
