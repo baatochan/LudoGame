@@ -1,7 +1,6 @@
 extends Sprite
 
 var diceResult = 1
-var isRolling = false;
 
 var diceSideSprites = [
 	preload("res://sprites/dice/side1.png"),
@@ -24,12 +23,8 @@ func _ready():
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta):
-	if Input.is_action_just_pressed("ui_select"):
-		if not isRolling:
-			isRolling = true
-			roll_dice()
-	pass
+#func _process(_delta):
+#	pass
 
 
 func roll_dice():
@@ -40,5 +35,6 @@ func roll_dice():
 		yield(get_tree().create_timer(0.05), "timeout")
 
 	diceResult = randomSide + 1
-	isRolling = false
-	pass
+	get_parent().diceResult = diceResult
+	get_parent().isDiceRolling = false
+	get_parent().TURN_STATE = ENUMS.TURN_STATE.SELECTING

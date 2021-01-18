@@ -3,6 +3,12 @@ extends Node2D
 var players = [] # array of players (filled during aspawn players)
 var playerPositions = [] # array with every 40 positions and values Vector2(playerId, pawnId) or NULL (if position is not occupied)
 
+var GAME_STATE = ENUMS.GAME_STATE.NOT_STARTED
+var TURN_STATE = ENUMS.TURN_STATE.ROLLING
+var PLAYER_TURN = 0
+var isDiceRolling = false
+var diceResult
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	playerPositions.resize(40) # fill array of player positions with nulls
@@ -12,31 +18,31 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta): # _delta - _ to suppress compulator warning about param never used
+	if (TURN_STATE == ENUMS.TURN_STATE.SELECTING and diceResult != 6 and players[PLAYER_TURN].areAllPawnsHome()):
+		nextPlayer()
+
 	if Input.is_action_just_pressed("ui_cancel"):
 		get_tree().quit()
-	elif Input.is_action_just_pressed("ui_right"):
-		var oldPosition = players[2].pawns[0].currentPosition
-		var isMoved = players[2].pawns[0].move(1)
-		if (isMoved):
-			if (oldPosition != null):
-				playerPositions[oldPosition] = null
-			if (playerPositions[players[2].pawns[0].currentPosition] != null):
-				var oldPlayerData = playerPositions[players[2].pawns[0].currentPosition]
-				players[oldPlayerData.x].pawns[oldPlayerData.y].sendToHome()
-			playerPositions[players[2].pawns[0].currentPosition] = Vector2(2, 0)
-			pass
-	elif Input.is_action_just_pressed("ui_left"):
-		var oldPosition = players[0].pawns[0].currentPosition
-		var isMoved = players[0].pawns[0].move(1)
-		if (isMoved):
-			if (oldPosition != null):
-				playerPositions[oldPosition] = null
-			if (playerPositions[players[0].pawns[0].currentPosition] != null):
-				var oldPlayerData = playerPositions[players[0].pawns[0].currentPosition]
-				players[oldPlayerData.x].pawns[oldPlayerData.y].sendToHome()
-			playerPositions[players[0].pawns[0].currentPosition] = Vector2(0, 0)
-			pass
-	pass
+	elif Input.is_action_just_pressed("ui_select"):
+		if (GAME_STATE == ENUMS.GAME_STATE.NOT_STARTED):
+			GAME_STATE = ENUMS.GAME_STATE.IN_PROGRESS
+			rollDice()
+		elif (GAME_STATE == ENUMS.GAME_STATE.IN_PROGRESS):
+			if (TURN_STATE == ENUMS.TURN_STATE.ROLLING):
+				if (not isDiceRolling):
+					rollDice()
+	elif Input.is_action_just_pressed("1"):
+		if (GAME_STATE == ENUMS.GAME_STATE.IN_PROGRESS and TURN_STATE == ENUMS.TURN_STATE.SELECTING):
+			movePawn(0)
+	elif Input.is_action_just_pressed("2"):
+		if (GAME_STATE == ENUMS.GAME_STATE.IN_PROGRESS and TURN_STATE == ENUMS.TURN_STATE.SELECTING):
+			movePawn(1)
+	elif Input.is_action_just_pressed("3"):
+		if (GAME_STATE == ENUMS.GAME_STATE.IN_PROGRESS and TURN_STATE == ENUMS.TURN_STATE.SELECTING):
+			movePawn(2)
+	elif Input.is_action_just_pressed("4"):
+		if (GAME_STATE == ENUMS.GAME_STATE.IN_PROGRESS and TURN_STATE == ENUMS.TURN_STATE.SELECTING):
+			movePawn(3)
 
 # add player nodes to the scene tree
 func spawnPlayers():
@@ -53,3 +59,26 @@ func spawnPlayers():
 		# add this node to the tree (show it)
 		add_child(players[playerId])
 	pass
+
+func rollDice():
+	isDiceRolling = true
+	$Dice.roll_dice()
+
+func nextPlayer():
+	TURN_STATE = ENUMS.TURN_STATE.ROLLING
+	PLAYER_TURN += 1
+	if (PLAYER_TURN > 3):
+		PLAYER_TURN = 0
+
+func movePawn(var pawn):
+	var selectedPawn = players[PLAYER_TURN].pawns[pawn]
+	var oldPosition = selectedPawn.currentPosition
+	var isMoved = selectedPawn.move(diceResult)
+	if (isMoved):
+		if (oldPosition != null):
+			playerPositions[oldPosition] = null
+		if (playerPositions[selectedPawn.currentPosition] != null):
+			var oldPlayerData = playerPositions[selectedPawn.currentPosition]
+			players[oldPlayerData.x].pawns[oldPlayerData.y].sendToHome()
+		playerPositions[selectedPawn.currentPosition] = Vector2(PLAYER_TURN, pawn)
+		nextPlayer()

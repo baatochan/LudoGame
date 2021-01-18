@@ -34,3 +34,11 @@ func spawnPawns():
 		# add this sprite to the tree (show it)
 		add_child(pawns[pawnId])
 	pass
+
+func areAllPawnsHome():
+	var val = true
+	if (not pawns[0].isPawnHome()): val = false
+	if (not pawns[1].isPawnHome()): val = false
+	if (not pawns[2].isPawnHome()): val = false
+	if (not pawns[3].isPawnHome()): val = false
+	return val
