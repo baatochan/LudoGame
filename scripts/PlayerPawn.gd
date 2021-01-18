@@ -1,7 +1,5 @@
 extends Sprite
 
-var POSITION_CORDS = preload("res://consts/CORDS.gd")
-
 var pawnId
 var playerId
 var homePositionCords
@@ -16,7 +14,7 @@ func move(var numberOfFieldsToMove):
 	if (currentPosition == null):
 		if (numberOfFieldsToMove == 6):
 			currentPosition = startPosition
-			position = POSITION_CORDS.value[startPosition]
+			position = CONSTS.FIELDS_CORDS[startPosition]
 		else:
 			return false
 	else:
@@ -26,11 +24,11 @@ func move(var numberOfFieldsToMove):
 		if (currentPosition + numberOfFieldsToMove >= 40):
 			currentPosition += numberOfFieldsToMove - 40
 			distanceFromStart += numberOfFieldsToMove
-			position = POSITION_CORDS.value[currentPosition]
+			position = CONSTS.FIELDS_CORDS[currentPosition]
 		else:
 			currentPosition += numberOfFieldsToMove
 			distanceFromStart += numberOfFieldsToMove
-			position = POSITION_CORDS.value[currentPosition]
+			position = CONSTS.FIELDS_CORDS[currentPosition]
 	return true
 
 func sendToHome():

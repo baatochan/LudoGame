@@ -10,11 +10,17 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Reference",
+"class": "CONSTS",
+"language": "GDScript",
+"path": "res://consts/CONSTS.gd"
+}, {
+"base": "Reference",
 "class": "ENUMS",
 "language": "GDScript",
 "path": "res://consts/ENUMS.gd"
 } ]
 _global_script_class_icons={
+"CONSTS": "",
 "ENUMS": ""
 }
 
