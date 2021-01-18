@@ -68,15 +68,18 @@ func nextPlayer():
 	if (PLAYER_TURN > 3):
 		PLAYER_TURN = 0
 
-func movePawn(var pawn):
+func movePawn(var pawn, var numberToMove = diceResult):
 	var selectedPawn = players[PLAYER_TURN].pawns[pawn]
 	var oldPosition = selectedPawn.currentPosition
-	var isMoved = selectedPawn.move(diceResult)
+	var isMoved = selectedPawn.move(numberToMove)
 	if (isMoved):
 		if (oldPosition != null):
 			playerPositions[oldPosition] = null
 		if (playerPositions[selectedPawn.currentPosition] != null):
 			var oldPlayerData = playerPositions[selectedPawn.currentPosition]
-			players[oldPlayerData.x].pawns[oldPlayerData.y].sendToHome()
+			if (oldPlayerData.x == PLAYER_TURN):
+				movePawn(oldPlayerData.y, -1)
+			else:
+				players[oldPlayerData.x].pawns[oldPlayerData.y].sendToHome()
 		playerPositions[selectedPawn.currentPosition] = Vector2(PLAYER_TURN, pawn)
 		nextPlayer()
