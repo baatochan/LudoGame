@@ -17,7 +17,9 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta): # _delta - _ to suppress compulator warning about param never used
-	if (TURN_STATE == ENUMS.TURN_STATE.SELECTING and diceResult != 6 and players[PLAYER_TURN].areAllPawnsHome()):
+	if (TURN_STATE == ENUMS.TURN_STATE.SELECTING and diceResult != 6 and players[PLAYER_TURN].isAnyPawnOnBoard()):
+		nextPlayer()
+	elif (players[PLAYER_TURN].areAllPawnsFinished()):
 		nextPlayer()
 
 	if Input.is_action_just_pressed("ui_cancel"):
@@ -76,7 +78,7 @@ func movePawn(var pawn, var numberToMove = diceResult):
 	var selectedPawn = players[PLAYER_TURN].pawns[pawn]
 	var oldPosition = selectedPawn.currentPosition
 	var isMoved = selectedPawn.move(numberToMove)
-	if (isMoved):
+	if (isMoved == ENUMS.MOVE_RESULT.SUCCESSFUL):
 		if (oldPosition != null):
 			playerPositions[oldPosition] = null
 		if (playerPositions[selectedPawn.currentPosition] != null):
@@ -86,6 +88,10 @@ func movePawn(var pawn, var numberToMove = diceResult):
 			else:
 				players[oldPlayerData.x].pawns[oldPlayerData.y].sendToHome()
 		playerPositions[selectedPawn.currentPosition] = Vector2(PLAYER_TURN, pawn)
+		return true
+	elif (isMoved == ENUMS.MOVE_RESULT.FINAL):
+		if (oldPosition != null):
+			playerPositions[oldPosition] = null
 		return true
 	else:
 		return false

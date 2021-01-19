@@ -13,10 +13,18 @@ const PAWNS_COLORS = [
 # No of position on which player starts
 const START_POSITIONS = [ 0, 10, 20, 30 ]
 
+# coordinates of final fields for every player and every pawn
+const FINAL_CORDS = [
+	[Vector2(961, 634), Vector2(961, 728), Vector2(961, 821), Vector2(961, 915)], # player 1
+	[Vector2(867, 541), Vector2(774, 541), Vector2(680, 541), Vector2(587, 541)], # player 2
+	[Vector2(961, 447), Vector2(961, 354), Vector2(961, 260), Vector2(961, 167)], # player 3
+	[Vector2(1054, 541), Vector2(1148, 541), Vector2(1241, 541), Vector2(1335, 541)] # player 4
+]
+
 # coordinates of home for every player and every pawn
 const HOME_CORDS = [
 	[Vector2(493, 914), Vector2(587, 914), Vector2(493, 1007), Vector2(587, 1007)], # player 1
-	[Vector2(493, 73), Vector2(587, 73), Vector2(493, 167), Vector2(587,167)], # player 2
+	[Vector2(493, 73), Vector2(587, 73), Vector2(493, 167), Vector2(587, 167)], # player 2
 	[Vector2(1334, 73), Vector2(1427, 73), Vector2(1334, 167), Vector2(1427, 167)], # player 3
 	[Vector2(1334, 914), Vector2(1427, 914), Vector2(1334, 1007), Vector2(1427, 1007)] # player 4
 ]

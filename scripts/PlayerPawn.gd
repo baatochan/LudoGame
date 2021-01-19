@@ -2,10 +2,10 @@ extends Sprite
 
 var pawnId
 var playerId
-var homePositionCords
 var currentPosition = null
 var startPosition
 var distanceFromStart = 0
+var pawnPlace = ENUMS.PAWN_PLACE.HOME
 
 var label
 
@@ -13,15 +13,22 @@ func _ready():
 	spawnLabel()
 
 func move(var numberOfFieldsToMove):
-	if (currentPosition == null):
+	if (pawnPlace == ENUMS.PAWN_PLACE.HOME):
 		if (numberOfFieldsToMove == 6):
 			currentPosition = startPosition
 			position = CONSTS.FIELDS_CORDS[startPosition]
+			pawnPlace = ENUMS.PAWN_PLACE.BOARD
 		else:
-			return false
+			return ENUMS.MOVE_RESULT.NOT_SUCCESSFUL
+	elif (pawnPlace == ENUMS.PAWN_PLACE.FINAL):
+		return ENUMS.MOVE_RESULT.NOT_SUCCESSFUL
 	else:
-		if (distanceFromStart >= 39):
-			return false
+		if (distanceFromStart + numberOfFieldsToMove > 39):
+			currentPosition = null
+			distanceFromStart = 40
+			pawnPlace = ENUMS.PAWN_PLACE.FINAL
+			position = CONSTS.FINAL_CORDS[playerId][pawnId]
+			return ENUMS.MOVE_RESULT.FINAL
 			pass
 		if (currentPosition + numberOfFieldsToMove >= 40):
 			currentPosition += numberOfFieldsToMove - 40
@@ -35,15 +42,16 @@ func move(var numberOfFieldsToMove):
 			currentPosition += numberOfFieldsToMove
 			distanceFromStart += numberOfFieldsToMove
 			position = CONSTS.FIELDS_CORDS[currentPosition]
-	return true
+	return ENUMS.MOVE_RESULT.SUCCESSFUL
 
 func sendToHome():
 	currentPosition = null
 	distanceFromStart = 0
-	position = homePositionCords
+	pawnPlace = ENUMS.PAWN_PLACE.HOME
+	position = CONSTS.HOME_CORDS[playerId][pawnId]
 
-func isPawnHome():
-	return (currentPosition == null)
+func isPawnOnBoard():
+	return (pawnPlace != ENUMS.PAWN_PLACE.BOARD)
 
 func spawnLabel():
 	label = Label.new()

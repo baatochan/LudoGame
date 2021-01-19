@@ -19,7 +19,6 @@ func spawnPawns():
 		pawnNode.pawnId = pawnId
 		pawnNode.playerId = id
 		pawnNode.position = CONSTS.HOME_CORDS[id][pawnId]
-		pawnNode.homePositionCords = CONSTS.HOME_CORDS[id][pawnId]
 		pawnNode.texture = preload("res://sprites/Player.svg")
 		pawnNode.modulate = CONSTS.PAWNS_COLORS[id]
 		pawnNode.startPosition = CONSTS.START_POSITIONS[id]
@@ -28,10 +27,17 @@ func spawnPawns():
 		# add this sprite to the tree (show it)
 		add_child(pawns[pawnId])
 
-func areAllPawnsHome():
+func isAnyPawnOnBoard():
 	var val = true
-	if (not pawns[0].isPawnHome()): val = false
-	if (not pawns[1].isPawnHome()): val = false
-	if (not pawns[2].isPawnHome()): val = false
-	if (not pawns[3].isPawnHome()): val = false
+	if (not pawns[0].isPawnOnBoard()): val = false
+	if (not pawns[1].isPawnOnBoard()): val = false
+	if (not pawns[2].isPawnOnBoard()): val = false
+	if (not pawns[3].isPawnOnBoard()): val = false
 	return val
+
+func areAllPawnsFinished():
+	return (
+		pawns[0].pawnPlace == ENUMS.PAWN_PLACE.FINAL and
+		pawns[1].pawnPlace == ENUMS.PAWN_PLACE.FINAL and
+		pawns[2].pawnPlace == ENUMS.PAWN_PLACE.FINAL and
+		pawns[3].pawnPlace == ENUMS.PAWN_PLACE.FINAL)
