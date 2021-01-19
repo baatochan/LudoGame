@@ -18,7 +18,7 @@ func _ready():
 	set_texture(diceSideSprites[randomSide])
 
 
-func roll_dice():
+func rollDice():
 	var randomSide = 0
 	for _i in range(20):
 		randomSide = randi() % 6 # rand int, range [0, 5]

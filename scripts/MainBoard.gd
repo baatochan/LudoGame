@@ -66,7 +66,7 @@ func spawnPlayers():
 
 func rollDice():
 	isDiceRolling = true
-	$Dice.roll_dice()
+	$Dice.rollDice()
 
 func nextPlayer():
 	TURN_STATE = ENUMS.TURN_STATE.ROLLING
