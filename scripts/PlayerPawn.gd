@@ -58,7 +58,7 @@ func spawnLabel():
 	label.set_text(str(pawnId + 1))
 	label.set_align(Label.ALIGN_CENTER)
 	label.set_valign(Label.VALIGN_CENTER)
-	label.add_font_override("font", preload("res://fonts/default.tres"))
+	label.add_font_override("font", preload("res://fonts/default32.tres"))
 	label.add_color_override("font_color", Color(0,0,0))
 	label.margin_left = -20
 	label.margin_right = 20

@@ -18,7 +18,7 @@ func _ready():
 	set_texture(diceSideSprites[randomSide])
 
 
-func rollDice():
+func rollDice(): #async
 	var randomSide = 0
 	for _i in range(20):
 		randomSide = randi() % 6 # rand int, range [0, 5]
@@ -28,3 +28,4 @@ func rollDice():
 	get_parent().diceResult = randomSide + 1
 	get_parent().isDiceRolling = false
 	get_parent().TURN_STATE = ENUMS.TURN_STATE.SELECTING
+	get_parent().updateTurnStateLabels()

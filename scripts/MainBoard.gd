@@ -13,19 +13,19 @@ var diceResult
 func _ready():
 	playerPositions.resize(40) # fill array of player positions with nulls
 	spawnPlayers()
+	updateTurnStateLabels()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta): # _delta - _ to suppress compulator warning about param never used
 	if (TURN_STATE == ENUMS.TURN_STATE.SELECTING and diceResult != 6 and players[PLAYER_TURN].isAnyPawnOnBoard()):
 		nextPlayer()
-	elif (players[PLAYER_TURN].areAllPawnsFinished()):
-		nextPlayer()
 
 	if Input.is_action_just_pressed("ui_cancel"):
 		get_tree().quit()
 	elif Input.is_action_just_pressed("ui_select"):
 		if (GAME_STATE == ENUMS.GAME_STATE.NOT_STARTED):
+			updatePlayerLabel()
 			GAME_STATE = ENUMS.GAME_STATE.IN_PROGRESS
 			rollDice()
 		elif (GAME_STATE == ENUMS.GAME_STATE.IN_PROGRESS):
@@ -35,19 +35,23 @@ func _process(_delta): # _delta - _ to suppress compulator warning about param n
 	elif Input.is_action_just_pressed("1"):
 		if (GAME_STATE == ENUMS.GAME_STATE.IN_PROGRESS and TURN_STATE == ENUMS.TURN_STATE.SELECTING):
 			var isSuccessfulMovement = movePawn(0)
-			if isSuccessfulMovement: nextPlayer()
+			var isWinning = checkIfWinning()
+			if (isSuccessfulMovement and not isWinning): nextPlayer()
 	elif Input.is_action_just_pressed("2"):
 		if (GAME_STATE == ENUMS.GAME_STATE.IN_PROGRESS and TURN_STATE == ENUMS.TURN_STATE.SELECTING):
 			var isSuccessfulMovement = movePawn(1)
-			if isSuccessfulMovement: nextPlayer()
+			var isWinning = checkIfWinning()
+			if (isSuccessfulMovement and not isWinning): nextPlayer()
 	elif Input.is_action_just_pressed("3"):
 		if (GAME_STATE == ENUMS.GAME_STATE.IN_PROGRESS and TURN_STATE == ENUMS.TURN_STATE.SELECTING):
 			var isSuccessfulMovement = movePawn(2)
-			if isSuccessfulMovement: nextPlayer()
+			var isWinning = checkIfWinning()
+			if (isSuccessfulMovement and not isWinning): nextPlayer()
 	elif Input.is_action_just_pressed("4"):
 		if (GAME_STATE == ENUMS.GAME_STATE.IN_PROGRESS and TURN_STATE == ENUMS.TURN_STATE.SELECTING):
 			var isSuccessfulMovement = movePawn(3)
-			if isSuccessfulMovement: nextPlayer()
+			var isWinning = checkIfWinning()
+			if (isSuccessfulMovement and not isWinning): nextPlayer()
 
 # add player nodes to the scene tree
 func spawnPlayers():
@@ -73,6 +77,8 @@ func nextPlayer():
 	PLAYER_TURN += 1
 	if (PLAYER_TURN > 3):
 		PLAYER_TURN = 0
+	updatePlayerLabel()
+	updateTurnStateLabels()
 
 func movePawn(var pawn, var numberToMove = diceResult):
 	var selectedPawn = players[PLAYER_TURN].pawns[pawn]
@@ -95,3 +101,32 @@ func movePawn(var pawn, var numberToMove = diceResult):
 		return true
 	else:
 		return false
+
+func checkIfWinning(var player = PLAYER_TURN):
+	if (players[player].areAllPawnsFinished()):
+		GAME_STATE = ENUMS.GAME_STATE.FINISHED
+		TURN_STATE = null
+		updateTurnStateLabels()
+		setWinningPlayer()
+		return true
+	else:
+		return false
+
+func updatePlayerLabel(var player = PLAYER_TURN):
+	$MainLabelNode/Label.text = "Player " + str(player + 1)
+	$MainLabelNode/Label.add_color_override("font_color", CONSTS.FIELDS_COLORS[player])
+
+func updateTurnStateLabels(var state = TURN_STATE):
+	if (state == ENUMS.TURN_STATE.ROLLING):
+		$TurnStateLabelNode/Label.text = "Roll a dice"
+		$HintLabelNode/Label.text = "Use a space key"
+	elif (state == ENUMS.TURN_STATE.SELECTING):
+		$TurnStateLabelNode/Label.text = "Select a pawn"
+		$HintLabelNode/Label.text = "Use keys: 1, 2, 3 or 4"
+	else:
+		$TurnStateLabelNode/Label.text = ""
+		$HintLabelNode/Label.text = ""
+
+func setWinningPlayer(var player = PLAYER_TURN):
+	$MainLabelNode/Label.text = "Player " + str(player + 1) + " won!"
+	$MainLabelNode/Label.add_color_override("font_color", CONSTS.FIELDS_COLORS[player])
