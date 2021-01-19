@@ -32,16 +32,20 @@ func _process(_delta): # _delta - _ to suppress compulator warning about param n
 					rollDice()
 	elif Input.is_action_just_pressed("1"):
 		if (GAME_STATE == ENUMS.GAME_STATE.IN_PROGRESS and TURN_STATE == ENUMS.TURN_STATE.SELECTING):
-			movePawn(0)
+			var isSuccessfulMovement = movePawn(0)
+			if isSuccessfulMovement: nextPlayer()
 	elif Input.is_action_just_pressed("2"):
 		if (GAME_STATE == ENUMS.GAME_STATE.IN_PROGRESS and TURN_STATE == ENUMS.TURN_STATE.SELECTING):
-			movePawn(1)
+			var isSuccessfulMovement = movePawn(1)
+			if isSuccessfulMovement: nextPlayer()
 	elif Input.is_action_just_pressed("3"):
 		if (GAME_STATE == ENUMS.GAME_STATE.IN_PROGRESS and TURN_STATE == ENUMS.TURN_STATE.SELECTING):
-			movePawn(2)
+			var isSuccessfulMovement = movePawn(2)
+			if isSuccessfulMovement: nextPlayer()
 	elif Input.is_action_just_pressed("4"):
 		if (GAME_STATE == ENUMS.GAME_STATE.IN_PROGRESS and TURN_STATE == ENUMS.TURN_STATE.SELECTING):
-			movePawn(3)
+			var isSuccessfulMovement = movePawn(3)
+			if isSuccessfulMovement: nextPlayer()
 
 # add player nodes to the scene tree
 func spawnPlayers():
@@ -82,4 +86,6 @@ func movePawn(var pawn, var numberToMove = diceResult):
 			else:
 				players[oldPlayerData.x].pawns[oldPlayerData.y].sendToHome()
 		playerPositions[selectedPawn.currentPosition] = Vector2(PLAYER_TURN, pawn)
-		nextPlayer()
+		return true
+	else:
+		return false

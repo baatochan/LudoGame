@@ -27,6 +27,10 @@ func move(var numberOfFieldsToMove):
 			currentPosition += numberOfFieldsToMove - 40
 			distanceFromStart += numberOfFieldsToMove
 			position = CONSTS.FIELDS_CORDS[currentPosition]
+		elif (currentPosition + numberOfFieldsToMove < 0):
+			currentPosition += numberOfFieldsToMove + 40
+			distanceFromStart += numberOfFieldsToMove
+			position = CONSTS.FIELDS_CORDS[currentPosition]
 		else:
 			currentPosition += numberOfFieldsToMove
 			distanceFromStart += numberOfFieldsToMove
