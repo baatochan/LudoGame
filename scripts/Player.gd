@@ -9,12 +9,28 @@ onready var board = get_node("/root/MainBoardView")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	randomize() # set seed for rand generator
+
 	spawnPawns()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta): # _delta - _ to suppress compulator warning about param never used
 	if board.PLAYER_TURN == id:
-		if playerType == ENUMS.PLAYER_TYPE.HUMAN:
+		if playerType == ENUMS.PLAYER_TYPE.AI:
+			# LEAKY CODE, REMOVE IT
+			# leaky code for AI player, game can be played with this code but it's completly not how it should be done.
+			if (board.GAME_STATE == ENUMS.GAME_STATE.NOT_STARTED):
+				yield(get_tree().create_timer(1.0), "timeout")
+				shouldDiceStartRolling = true
+			elif (board.GAME_STATE == ENUMS.GAME_STATE.IN_PROGRESS):
+				if (board.TURN_STATE == ENUMS.TURN_STATE.ROLLING):
+					yield(get_tree().create_timer(1.0), "timeout")
+					shouldDiceStartRolling = true
+				elif (board.TURN_STATE == ENUMS.TURN_STATE.SELECTING):
+					yield(get_tree().create_timer(1.0), "timeout")
+					choosenPawn = randi() % 4 # rand int, range [0, 3]
+			# LEAKY CODE, REMOVE IT
+		else:
 			if Input.is_action_just_pressed("ui_select"):
 				if (board.GAME_STATE == ENUMS.GAME_STATE.NOT_STARTED):
 					shouldDiceStartRolling = true

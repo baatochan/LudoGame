@@ -51,6 +51,8 @@ func spawnPlayers():
 		playerNode.name = "Player " + str(playerId)
 		playerNode.script = playerScript
 		playerNode.id = playerId
+		if playerId > 0:
+			playerNode.playerType = ENUMS.PLAYER_TYPE.AI
 		# add this node to the array
 		players.append(playerNode)
 		# add this node to the tree (show it)
