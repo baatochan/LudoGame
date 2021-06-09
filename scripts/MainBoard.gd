@@ -23,7 +23,8 @@ func _process(_delta): # _delta - _ to suppress compulator warning about param n
 
 	if Input.is_action_just_pressed("ui_cancel"):
 		get_tree().quit()
-	elif Input.is_action_just_pressed("ui_select"):
+
+	if players[PLAYER_TURN].shouldDiceStartRolling == true:
 		if (GAME_STATE == ENUMS.GAME_STATE.NOT_STARTED):
 			updatePlayerLabel()
 			GAME_STATE = ENUMS.GAME_STATE.IN_PROGRESS
@@ -32,7 +33,8 @@ func _process(_delta): # _delta - _ to suppress compulator warning about param n
 			if (TURN_STATE == ENUMS.TURN_STATE.ROLLING):
 				if (not isDiceRolling):
 					rollDice()
-	elif Input.is_action_just_pressed("1"):
+
+	if Input.is_action_just_pressed("1"):
 		if (GAME_STATE == ENUMS.GAME_STATE.IN_PROGRESS and TURN_STATE == ENUMS.TURN_STATE.SELECTING):
 			var isSuccessfulMovement = movePawn(0)
 			var isWinning = checkIfWinning()
@@ -69,6 +71,7 @@ func spawnPlayers():
 		add_child(players[playerId])
 
 func rollDice():
+	players[PLAYER_TURN].shouldDiceStartRolling = false
 	isDiceRolling = true
 	$Dice.rollDice()
 

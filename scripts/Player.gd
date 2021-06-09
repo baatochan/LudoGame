@@ -2,10 +2,22 @@ extends Node
 
 var id
 var pawns = [] # array of pawns (filled during aspawn pawns)
+var shouldDiceStartRolling = false
+onready var board = get_node("/root/MainBoardView")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	spawnPawns()
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(_delta): # _delta - _ to suppress compulator warning about param never used
+	if board.PLAYER_TURN == id:
+		if Input.is_action_just_pressed("ui_select"):
+			if (board.GAME_STATE == ENUMS.GAME_STATE.NOT_STARTED):
+				shouldDiceStartRolling = true
+			elif (board.GAME_STATE == ENUMS.GAME_STATE.IN_PROGRESS):
+				if (board.TURN_STATE == ENUMS.TURN_STATE.ROLLING):
+					shouldDiceStartRolling = true
 
 # add player's pawns to the scene tree
 func spawnPawns():
