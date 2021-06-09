@@ -34,25 +34,11 @@ func _process(_delta): # _delta - _ to suppress compulator warning about param n
 				if (not isDiceRolling):
 					rollDice()
 
-	if Input.is_action_just_pressed("1"):
-		if (GAME_STATE == ENUMS.GAME_STATE.IN_PROGRESS and TURN_STATE == ENUMS.TURN_STATE.SELECTING):
-			var isSuccessfulMovement = movePawn(0)
+	if (GAME_STATE == ENUMS.GAME_STATE.IN_PROGRESS and TURN_STATE == ENUMS.TURN_STATE.SELECTING):
+		if players[PLAYER_TURN].choosenPawn != null:
+			var isSuccessfulMovement = movePawn(players[PLAYER_TURN].choosenPawn)
 			var isWinning = checkIfWinning()
-			if (isSuccessfulMovement and not isWinning): nextPlayer()
-	elif Input.is_action_just_pressed("2"):
-		if (GAME_STATE == ENUMS.GAME_STATE.IN_PROGRESS and TURN_STATE == ENUMS.TURN_STATE.SELECTING):
-			var isSuccessfulMovement = movePawn(1)
-			var isWinning = checkIfWinning()
-			if (isSuccessfulMovement and not isWinning): nextPlayer()
-	elif Input.is_action_just_pressed("3"):
-		if (GAME_STATE == ENUMS.GAME_STATE.IN_PROGRESS and TURN_STATE == ENUMS.TURN_STATE.SELECTING):
-			var isSuccessfulMovement = movePawn(2)
-			var isWinning = checkIfWinning()
-			if (isSuccessfulMovement and not isWinning): nextPlayer()
-	elif Input.is_action_just_pressed("4"):
-		if (GAME_STATE == ENUMS.GAME_STATE.IN_PROGRESS and TURN_STATE == ENUMS.TURN_STATE.SELECTING):
-			var isSuccessfulMovement = movePawn(3)
-			var isWinning = checkIfWinning()
+			players[PLAYER_TURN].choosenPawn = null
 			if (isSuccessfulMovement and not isWinning): nextPlayer()
 
 # add player nodes to the scene tree
