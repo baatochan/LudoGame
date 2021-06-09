@@ -39,7 +39,11 @@ func _process(_delta): # _delta - _ to suppress compulator warning about param n
 			var isSuccessfulMovement = movePawn(players[PLAYER_TURN].choosenPawn)
 			var isWinning = checkIfWinning()
 			players[PLAYER_TURN].choosenPawn = null
-			if (isSuccessfulMovement and not isWinning): nextPlayer()
+			if (isSuccessfulMovement and not isWinning):
+				if (diceResult == 6):
+					anotherRoll()
+				else:
+					nextPlayer()
 
 # add player nodes to the scene tree
 func spawnPlayers():
@@ -60,6 +64,10 @@ func rollDice():
 	players[PLAYER_TURN].shouldDiceStartRolling = false
 	isDiceRolling = true
 	$Dice.rollDice()
+
+func anotherRoll():
+	TURN_STATE = ENUMS.TURN_STATE.ROLLING
+	updateTurnStateLabels()
 
 func nextPlayer():
 	TURN_STATE = ENUMS.TURN_STATE.ROLLING
