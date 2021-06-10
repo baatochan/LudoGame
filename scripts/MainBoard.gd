@@ -64,6 +64,7 @@ func rollDice():
 	$Dice.rollDice()
 
 func nextPlayer():
+	players[PLAYER_TURN].PLAYER_STATE = ENUMS.PLAYER_STATE.NEW_TURN
 	TURN_STATE = ENUMS.TURN_STATE.ROLLING
 	PLAYER_TURN += 1
 	if (PLAYER_TURN > 3):

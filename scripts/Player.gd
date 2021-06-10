@@ -5,6 +5,7 @@ var pawns = [] # array of pawns (filled during aspawn pawns)
 var shouldDiceStartRolling = false
 var choosenPawn = null
 var playerType = ENUMS.PLAYER_TYPE.HUMAN
+var PLAYER_STATE = ENUMS.PLAYER_STATE.NEW_TURN # not really needed for human player, at least with this design
 onready var board = get_node("/root/MainBoardView")
 
 # Called when the node enters the scene tree for the first time.
@@ -17,19 +18,31 @@ func _ready():
 func _process(_delta): # _delta - _ to suppress compulator warning about param never used
 	if board.PLAYER_TURN == id:
 		if playerType == ENUMS.PLAYER_TYPE.AI:
-			# LEAKY CODE, REMOVE IT
-			# leaky code for AI player, game can be played with this code but it's completly not how it should be done.
 			if (board.GAME_STATE == ENUMS.GAME_STATE.NOT_STARTED):
-				yield(get_tree().create_timer(1.0), "timeout")
-				shouldDiceStartRolling = true
+				if (PLAYER_STATE == ENUMS.PLAYER_STATE.NEW_TURN):
+					PLAYER_STATE = ENUMS.PLAYER_STATE.ROLLED
+					yield(get_tree().create_timer(3.0), "timeout")
+					shouldDiceStartRolling = true
 			elif (board.GAME_STATE == ENUMS.GAME_STATE.IN_PROGRESS):
 				if (board.TURN_STATE == ENUMS.TURN_STATE.ROLLING):
-					yield(get_tree().create_timer(1.0), "timeout")
-					shouldDiceStartRolling = true
+					if (PLAYER_STATE == ENUMS.PLAYER_STATE.NEW_TURN):
+						PLAYER_STATE = ENUMS.PLAYER_STATE.ROLLED
+						yield(get_tree().create_timer(1.0), "timeout")
+						shouldDiceStartRolling = true
 				elif (board.TURN_STATE == ENUMS.TURN_STATE.SELECTING):
-					yield(get_tree().create_timer(1.0), "timeout")
-					choosenPawn = randi() % 4 # rand int, range [0, 3]
-			# LEAKY CODE, REMOVE IT
+					if (PLAYER_STATE == ENUMS.PLAYER_STATE.ROLLED):
+						PLAYER_STATE = ENUMS.PLAYER_STATE.SELECTED
+						yield(get_tree().create_timer(2.0), "timeout")
+						if (not isAnyPawnOnBoard()): #isPawnOnBoard is broken and should be fixed with negation
+							var choosen = randi() % 4 # rand int, range [0, 3]
+							while (pawns[choosen].isPawnOnBoard()):
+								choosen = randi() % 4
+							choosenPawn = choosen
+						else:
+							var choosen = randi() % 4 # rand int, range [0, 3]
+							while (not pawns[choosen].isPawnInHome()):
+								choosen = randi() % 4
+							choosenPawn = choosen
 		else:
 			if Input.is_action_just_pressed("ui_select"):
 				if (board.GAME_STATE == ENUMS.GAME_STATE.NOT_STARTED):
