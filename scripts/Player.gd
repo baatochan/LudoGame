@@ -52,11 +52,11 @@ func spawnPawns():
 		add_child(pawns[pawnId])
 
 func isAnyPawnOnBoard():
-	var val = true
-	if (not pawns[0].isPawnOnBoard()): val = false
-	if (not pawns[1].isPawnOnBoard()): val = false
-	if (not pawns[2].isPawnOnBoard()): val = false
-	if (not pawns[3].isPawnOnBoard()): val = false
+	var val = false
+	if (pawns[0].isPawnOnBoard()): val = true
+	if (pawns[1].isPawnOnBoard()): val = true
+	if (pawns[2].isPawnOnBoard()): val = true
+	if (pawns[3].isPawnOnBoard()): val = true
 	return val
 
 func areAllPawnsFinished():

@@ -18,7 +18,7 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta): # _delta - _ to suppress compulator warning about param never used
-	if (TURN_STATE == ENUMS.TURN_STATE.SELECTING and diceResult != 6 and players[PLAYER_TURN].isAnyPawnOnBoard()):
+	if (TURN_STATE == ENUMS.TURN_STATE.SELECTING and diceResult != 6 and (not players[PLAYER_TURN].isAnyPawnOnBoard())):
 		nextPlayer()
 
 	if Input.is_action_just_pressed("ui_cancel"):
