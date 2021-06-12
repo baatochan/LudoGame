@@ -51,7 +51,7 @@ func sendToHome():
 	position = CONSTS.HOME_CORDS[playerId][pawnId]
 
 func isPawnOnBoard():
-	return (pawnPlace != ENUMS.PAWN_PLACE.BOARD)
+	return (pawnPlace == ENUMS.PAWN_PLACE.BOARD)
 
 func isPawnInHome():
 	return (pawnPlace == ENUMS.PAWN_PLACE.HOME)

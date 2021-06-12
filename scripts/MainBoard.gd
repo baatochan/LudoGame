@@ -18,7 +18,7 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta): # _delta - _ to suppress compulator warning about param never used
-	if (TURN_STATE == ENUMS.TURN_STATE.SELECTING and diceResult != 6 and players[PLAYER_TURN].isAnyPawnOnBoard()):
+	if (TURN_STATE == ENUMS.TURN_STATE.SELECTING and diceResult != 6 and (not players[PLAYER_TURN].isAnyPawnOnBoard())):
 		nextPlayer()
 
 	if Input.is_action_just_pressed("ui_cancel"):
@@ -39,7 +39,11 @@ func _process(_delta): # _delta - _ to suppress compulator warning about param n
 			var isSuccessfulMovement = movePawn(players[PLAYER_TURN].choosenPawn)
 			var isWinning = checkIfWinning()
 			players[PLAYER_TURN].choosenPawn = null
-			if (isSuccessfulMovement and not isWinning): nextPlayer()
+			if (isSuccessfulMovement and not isWinning):
+				if (diceResult == 6):
+					anotherRoll()
+				else:
+					nextPlayer()
 
 # add player nodes to the scene tree
 func spawnPlayers():
@@ -62,6 +66,10 @@ func rollDice():
 	players[PLAYER_TURN].shouldDiceStartRolling = false
 	isDiceRolling = true
 	$Dice.rollDice()
+
+func anotherRoll():
+	TURN_STATE = ENUMS.TURN_STATE.ROLLING
+	updateTurnStateLabels()
 
 func nextPlayer():
 	players[PLAYER_TURN].PLAYER_STATE = ENUMS.PLAYER_STATE.NEW_TURN
