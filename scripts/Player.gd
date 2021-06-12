@@ -33,9 +33,9 @@ func _process(_delta): # _delta - _ to suppress compulator warning about param n
 					if (PLAYER_STATE == ENUMS.PLAYER_STATE.ROLLED):
 						PLAYER_STATE = ENUMS.PLAYER_STATE.SELECTED
 						yield(get_tree().create_timer(2.0), "timeout")
-						if (not isAnyPawnOnBoard()): #isPawnOnBoard is broken and should be fixed with negation
+						if (isAnyPawnOnBoard()):
 							var choosen = randi() % 4 # rand int, range [0, 3]
-							while (pawns[choosen].isPawnOnBoard()):
+							while (not pawns[choosen].isPawnOnBoard()):
 								choosen = randi() % 4
 							choosenPawn = choosen
 						else:

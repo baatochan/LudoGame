@@ -68,6 +68,7 @@ func rollDice():
 	$Dice.rollDice()
 
 func anotherRoll():
+	players[PLAYER_TURN].PLAYER_STATE = ENUMS.PLAYER_STATE.NEW_TURN
 	TURN_STATE = ENUMS.TURN_STATE.ROLLING
 	updateTurnStateLabels()
 
