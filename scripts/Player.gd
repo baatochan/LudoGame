@@ -33,7 +33,7 @@ func _process(_delta): # _delta - _ to suppress compulator warning about param n
 				if (board.TURN_STATE == ENUMS.TURN_STATE.ROLLING):
 					rollDice(ROLL_WAIT_TIMER)
 				elif (board.TURN_STATE == ENUMS.TURN_STATE.SELECTING):
-					selectPawnUsingStrategy(MOVE_WAIT_TIMER)
+					selectPawnByAI(MOVE_WAIT_TIMER)
 		else:
 			if Input.is_action_just_pressed("ui_select"):
 				if (board.GAME_STATE == ENUMS.GAME_STATE.NOT_STARTED):
@@ -98,18 +98,45 @@ func selectPawn(pawn):
 		PLAYER_STATE = ENUMS.PLAYER_STATE.SELECTED
 		choosenPawn = pawn
 
-func selectPawnUsingStrategy(timer):
+func selectPawnByAI(timer):
 	if (PLAYER_STATE == ENUMS.PLAYER_STATE.ROLLED):
 		PLAYER_STATE = ENUMS.PLAYER_STATE.SELECTED
 		if timer > 0:
 			yield(get_tree().create_timer(timer), "timeout")
-		if (isAnyPawnOnBoard()):
-			var choosen = randi() % 4 # rand int, range [0, 3]
-			while (not pawns[choosen].isPawnOnBoard()):
-				choosen = randi() % 4
-			choosenPawn = choosen
+
+		if (alwaysHit):
+			if checkIfHittingIsPossible():
+				return
+		elif (alwaysLeave):
+			if board.diceResult == 6:
+				var isSelected = selectPawnToLeaveHome()
+				if isSelected:
+					return
 		else:
-			var choosen = randi() % 4 # rand int, range [0, 3]
-			while (not pawns[choosen].isPawnInHome()):
-				choosen = randi() % 4
-			choosenPawn = choosen
+			match PLAYER_STRATEGY:
+				# to be implemented
+				_:
+					print("Player strategy is not a valid enum value, using fallback strategy")
+					# should be removed when correct strategies are implemented and repleced with one of the correct strategies
+					selectPawnUsingFallbackStrategy()
+
+func checkIfHittingIsPossible():
+	# to be implemented
+	return false
+
+func selectPawnToLeaveHome():
+	# to be implemented
+	return false
+
+# should be removed when correct strategies are implemented
+func selectPawnUsingFallbackStrategy():
+	if (isAnyPawnOnBoard()):
+		var choosen = randi() % 4 # rand int, range [0, 3]
+		while (not pawns[choosen].isPawnOnBoard()):
+			choosen = randi() % 4
+		choosenPawn = choosen
+	else:
+		var choosen = randi() % 4 # rand int, range [0, 3]
+		while (not pawns[choosen].isPawnInHome()):
+			choosen = randi() % 4
+		choosenPawn = choosen
