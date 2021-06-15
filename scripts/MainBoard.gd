@@ -2,6 +2,11 @@ extends Node2D
 
 var players = [] # array of players (filled during aspawn players)
 var playerPositions = [] # array with every 40 positions and values Vector2(playerId, pawnId) or NULL (if position is not occupied)
+var playerSettings = [# for later implementation of different AI stratgies, will be received form the starting screen
+	[ENUMS.PLAYER_TYPE.HUMAN, 0, false, false],
+	[ENUMS.PLAYER_TYPE.AI, 0, false, false],
+	[ENUMS.PLAYER_TYPE.AI, 0, false, false],
+	[ENUMS.PLAYER_TYPE.AI, 0, false, false]]
 
 var GAME_STATE = ENUMS.GAME_STATE.NOT_STARTED
 var TURN_STATE = ENUMS.TURN_STATE.ROLLING
@@ -11,6 +16,7 @@ var diceResult
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	randomize() # set seed for rand generator
 	playerPositions.resize(40) # fill array of player positions with nulls
 	spawnPlayers()
 	updateTurnStateLabels()
@@ -55,6 +61,10 @@ func spawnPlayers():
 		playerNode.name = "Player " + str(playerId)
 		playerNode.script = playerScript
 		playerNode.id = playerId
+		playerNode.PLAYER_TYPE = playerSettings[playerId][0]
+		playerNode.PLAYER_STRATEGY = playerSettings[playerId][1]
+		playerNode.alwaysHit = playerSettings[playerId][2]
+		playerNode.alwaysLeave = playerSettings[playerId][3]
 		# add this node to the array
 		players.append(playerNode)
 		# add this node to the tree (show it)
@@ -66,10 +76,12 @@ func rollDice():
 	$Dice.rollDice()
 
 func anotherRoll():
+	players[PLAYER_TURN].PLAYER_STATE = ENUMS.PLAYER_STATE.NEW_TURN
 	TURN_STATE = ENUMS.TURN_STATE.ROLLING
 	updateTurnStateLabels()
 
 func nextPlayer():
+	players[PLAYER_TURN].PLAYER_STATE = ENUMS.PLAYER_STATE.NEW_TURN
 	TURN_STATE = ENUMS.TURN_STATE.ROLLING
 	PLAYER_TURN += 1
 	if (PLAYER_TURN > 3):
