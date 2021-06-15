@@ -19,8 +19,6 @@ onready var board = get_node("/root/MainBoardView")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	randomize() # set seed for rand generator
-
 	spawnPawns()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

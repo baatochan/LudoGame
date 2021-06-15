@@ -11,8 +11,6 @@ var diceSideSprites = [
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	randomize() # set seed for rand generator
-
 	var randomSide = randi() % 6 # rand int, range [0, 5]
 
 	set_texture(diceSideSprites[randomSide])
