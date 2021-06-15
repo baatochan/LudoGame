@@ -1,9 +1,5 @@
 extends Node
 
-const START_GAMER_WAIT_TIMER = 3.0
-const ROLL_WAIT_TIMER = 1.0
-const MOVE_WAIT_TIMER = 1.0
-
 var id
 var pawns = [] # array of pawns (filled during aspawn pawns)
 var shouldDiceStartRolling = false
@@ -26,12 +22,12 @@ func _process(_delta): # _delta - _ to suppress compulator warning about param n
 	if board.PLAYER_TURN == id:
 		if PLAYER_TYPE == ENUMS.PLAYER_TYPE.AI:
 			if (board.GAME_STATE == ENUMS.GAME_STATE.NOT_STARTED):
-				rollDice(START_GAMER_WAIT_TIMER)
+				rollDice(rand_range(CONSTS.MIN_START_GAME_WAIT_TIMER, CONSTS.MAX_START_GAME_WAIT_TIMER))
 			elif (board.GAME_STATE == ENUMS.GAME_STATE.IN_PROGRESS):
 				if (board.TURN_STATE == ENUMS.TURN_STATE.ROLLING):
-					rollDice(ROLL_WAIT_TIMER)
+					rollDice(rand_range(CONSTS.MIN_ROLL_WAIT_TIMER, CONSTS.MAX_ROLL_WAIT_TIMER))
 				elif (board.TURN_STATE == ENUMS.TURN_STATE.SELECTING):
-					selectPawnByAI(MOVE_WAIT_TIMER)
+					selectPawnByAI(rand_range(CONSTS.MIN_MOVE_WAIT_TIMER, CONSTS.MAX_MOVE_WAIT_TIMER))
 		else:
 			if Input.is_action_just_pressed("ui_select"):
 				if (board.GAME_STATE == ENUMS.GAME_STATE.NOT_STARTED):
