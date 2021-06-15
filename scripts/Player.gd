@@ -1,5 +1,9 @@
 extends Node
 
+const START_GAMER_WAIT_TIMER = 3.0
+const ROLL_WAIT_TIMER = 1.0
+const MOVE_WAIT_TIMER = 1.0
+
 var id
 var pawns = [] # array of pawns (filled during aspawn pawns)
 var shouldDiceStartRolling = false
@@ -24,46 +28,28 @@ func _process(_delta): # _delta - _ to suppress compulator warning about param n
 	if board.PLAYER_TURN == id:
 		if PLAYER_TYPE == ENUMS.PLAYER_TYPE.AI:
 			if (board.GAME_STATE == ENUMS.GAME_STATE.NOT_STARTED):
-				if (PLAYER_STATE == ENUMS.PLAYER_STATE.NEW_TURN):
-					PLAYER_STATE = ENUMS.PLAYER_STATE.ROLLED
-					yield(get_tree().create_timer(3.0), "timeout")
-					shouldDiceStartRolling = true
+				rollDice(START_GAMER_WAIT_TIMER)
 			elif (board.GAME_STATE == ENUMS.GAME_STATE.IN_PROGRESS):
 				if (board.TURN_STATE == ENUMS.TURN_STATE.ROLLING):
-					if (PLAYER_STATE == ENUMS.PLAYER_STATE.NEW_TURN):
-						PLAYER_STATE = ENUMS.PLAYER_STATE.ROLLED
-						yield(get_tree().create_timer(1.0), "timeout")
-						shouldDiceStartRolling = true
+					rollDice(ROLL_WAIT_TIMER)
 				elif (board.TURN_STATE == ENUMS.TURN_STATE.SELECTING):
-					if (PLAYER_STATE == ENUMS.PLAYER_STATE.ROLLED):
-						PLAYER_STATE = ENUMS.PLAYER_STATE.SELECTED
-						yield(get_tree().create_timer(2.0), "timeout")
-						if (isAnyPawnOnBoard()):
-							var choosen = randi() % 4 # rand int, range [0, 3]
-							while (not pawns[choosen].isPawnOnBoard()):
-								choosen = randi() % 4
-							choosenPawn = choosen
-						else:
-							var choosen = randi() % 4 # rand int, range [0, 3]
-							while (not pawns[choosen].isPawnInHome()):
-								choosen = randi() % 4
-							choosenPawn = choosen
+					selectPawnUsingStrategy(MOVE_WAIT_TIMER)
 		else:
 			if Input.is_action_just_pressed("ui_select"):
 				if (board.GAME_STATE == ENUMS.GAME_STATE.NOT_STARTED):
-					shouldDiceStartRolling = true
+					rollDice()
 				elif (board.GAME_STATE == ENUMS.GAME_STATE.IN_PROGRESS):
 					if (board.TURN_STATE == ENUMS.TURN_STATE.ROLLING):
-						shouldDiceStartRolling = true
+						rollDice()
 			elif (board.GAME_STATE == ENUMS.GAME_STATE.IN_PROGRESS and board.TURN_STATE == ENUMS.TURN_STATE.SELECTING):
 				if Input.is_action_just_pressed("1"):
-					choosenPawn = 0;
+					selectPawn(0)
 				elif Input.is_action_just_pressed("2"):
-					choosenPawn = 1;
+					selectPawn(1)
 				elif Input.is_action_just_pressed("3"):
-					choosenPawn = 2;
+					selectPawn(2)
 				elif Input.is_action_just_pressed("4"):
-					choosenPawn = 3;
+					selectPawn(3)
 
 # add player's pawns to the scene tree
 func spawnPawns():
@@ -99,3 +85,31 @@ func areAllPawnsFinished():
 		pawns[1].pawnPlace == ENUMS.PAWN_PLACE.FINAL and
 		pawns[2].pawnPlace == ENUMS.PAWN_PLACE.FINAL and
 		pawns[3].pawnPlace == ENUMS.PAWN_PLACE.FINAL)
+
+func rollDice(timer = 0):
+	if (PLAYER_STATE == ENUMS.PLAYER_STATE.NEW_TURN):
+		PLAYER_STATE = ENUMS.PLAYER_STATE.ROLLED
+		if (timer > 0):
+			yield(get_tree().create_timer(timer), "timeout")
+		shouldDiceStartRolling = true
+
+func selectPawn(pawn):
+	if (PLAYER_STATE == ENUMS.PLAYER_STATE.ROLLED):
+		PLAYER_STATE = ENUMS.PLAYER_STATE.SELECTED
+		choosenPawn = pawn
+
+func selectPawnUsingStrategy(timer):
+	if (PLAYER_STATE == ENUMS.PLAYER_STATE.ROLLED):
+		PLAYER_STATE = ENUMS.PLAYER_STATE.SELECTED
+		if timer > 0:
+			yield(get_tree().create_timer(timer), "timeout")
+		if (isAnyPawnOnBoard()):
+			var choosen = randi() % 4 # rand int, range [0, 3]
+			while (not pawns[choosen].isPawnOnBoard()):
+				choosen = randi() % 4
+			choosenPawn = choosen
+		else:
+			var choosen = randi() % 4 # rand int, range [0, 3]
+			while (not pawns[choosen].isPawnInHome()):
+				choosen = randi() % 4
+			choosenPawn = choosen
