@@ -4,8 +4,13 @@ var id
 var pawns = [] # array of pawns (filled during aspawn pawns)
 var shouldDiceStartRolling = false
 var choosenPawn = null
-var playerType = ENUMS.PLAYER_TYPE.HUMAN
 var PLAYER_STATE = ENUMS.PLAYER_STATE.NEW_TURN # not really needed for human player, at least with this design
+
+var PLAYER_TYPE
+var PLAYER_STRATEGY
+var alwaysHit
+var alwaysLeave
+
 onready var board = get_node("/root/MainBoardView")
 
 # Called when the node enters the scene tree for the first time.
@@ -17,7 +22,7 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta): # _delta - _ to suppress compulator warning about param never used
 	if board.PLAYER_TURN == id:
-		if playerType == ENUMS.PLAYER_TYPE.AI:
+		if PLAYER_TYPE == ENUMS.PLAYER_TYPE.AI:
 			if (board.GAME_STATE == ENUMS.GAME_STATE.NOT_STARTED):
 				if (PLAYER_STATE == ENUMS.PLAYER_STATE.NEW_TURN):
 					PLAYER_STATE = ENUMS.PLAYER_STATE.ROLLED
