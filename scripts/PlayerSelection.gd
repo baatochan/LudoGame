@@ -26,25 +26,25 @@ func object_features_init():
 	$AIMarkGreen.visible = false
 	$HumanMarkYellow.visible = true
 	$AIMarkYellow.visible = false
-	
+
 	$StartGameRect/Text.text = "START GAME"
 	$QuitRect/Text.text = "QUIT"
-	
+
 	$ControlRed/Text.text = "CHOOSE TYPE"
 	$StrategyRed/Text.text = "SOLO"
 	$OptionOneRed/Text.text = "ALWAYS HIT: OFF"
 	$OptionTwoRed/Text.text = "ALWAYS LEAVE: OFF"
-	
+
 	$ControlBlue/Text.text = "CHOOSE TYPE"
 	$StrategyBlue/Text.text = "SOLO"
 	$OptionOneBlue/Text.text = "ALWAYS HIT: OFF"
 	$OptionTwoBlue/Text.text = "ALWAYS LEAVE: OFF"
-	
+
 	$ControlGreen/Text.text = "CHOOSE TYPE"
 	$StrategyGreen/Text.text = "SOLO"
 	$OptionOneGreen/Text.text = "ALWAYS HIT: OFF"
 	$OptionTwoGreen/Text.text = "ALWAYS LEAVE: OFF"
-	
+
 	$ControlYellow/Text.text = "CHOOSE TYPE"
 	$StrategyYellow/Text.text = "SOLO"
 	$OptionOneYellow/Text.text = "ALWAYS HIT: OFF"
@@ -60,29 +60,29 @@ var selected_player = 0
 
 func change_menu_color():
 	$StartGameRect.color = standardButton
-	
+
 	$ControlRed.color = standardButton
 	$StrategyRed.color = optionalButtonRed
 	$OptionOneRed.color = optionalButtonRed
 	$OptionTwoRed.color = optionalButtonRed
-	
+
 	$ControlBlue.color = standardButton
 	$StrategyBlue.color = optionalButtonBlue
 	$OptionOneBlue.color = optionalButtonBlue
 	$OptionTwoBlue.color = optionalButtonBlue
-	
+
 	$ControlGreen.color = standardButton
 	$StrategyGreen.color = optionalButtonGreen
 	$OptionOneGreen.color = optionalButtonGreen
 	$OptionTwoGreen.color = optionalButtonGreen
-	
+
 	$ControlYellow.color = standardButton
 	$StrategyYellow.color = optionalButtonYellow
 	$OptionOneYellow.color = optionalButtonYellow
 	$OptionTwoYellow.color = optionalButtonYellow
-	
+
 	$QuitRect.color = standardButton
-	
+
 	match selected_menu:
 		0:
 			$StartGameRect.color = highlightedButton
