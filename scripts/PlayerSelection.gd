@@ -1,14 +1,5 @@
 extends Node2D
 
-var playerSettings = [
-	[ENUMS.PLAYER_TYPE.HUMAN, ENUMS.AI_STRATEGY.SOLO, false, false],
-	[ENUMS.PLAYER_TYPE.HUMAN, ENUMS.AI_STRATEGY.SOLO, false, false],
-	[ENUMS.PLAYER_TYPE.HUMAN, ENUMS.AI_STRATEGY.SOLO, false, false],
-	[ENUMS.PLAYER_TYPE.HUMAN, ENUMS.AI_STRATEGY.SOLO, false, false]]
-
-# ================================================== #
-# ================================================== #
-
 var standardButton = Color.gray
 var highlightedButton = Color.greenyellow
 
@@ -136,7 +127,7 @@ func _ready():
 	object_features_init()
 	change_menu_color()
 
-func _input(event):
+func _input(_event): # TODO: check if event cant replace is_action_just_pressed
 	if Input.is_action_just_pressed("ui_down"):
 		if selected_menu < 5:
 			selected_menu = selected_menu + 1
@@ -164,50 +155,51 @@ func _input(event):
 	elif Input.is_action_just_pressed("ui_accept"):
 		match selected_menu:
 			0:
-				get_tree().change_scene("res://scenes/MainBoard.tscn")
+				if get_tree().change_scene("res://scenes/MainBoard.tscn") != OK:
+					print ("An unexpected error occured when trying to switch to the MainBoard scene")
 			1:
 				match selected_player:
 					0:
-						if playerSettings[0][0] == ENUMS.PLAYER_TYPE.HUMAN:
-							playerSettings[0][0] = ENUMS.PLAYER_TYPE.AI
+						if Settings.PLAYERS_SETTINGS[0][0] == ENUMS.PLAYER_TYPE.HUMAN:
+							Settings.PLAYERS_SETTINGS[0][0] = ENUMS.PLAYER_TYPE.AI
 							$HumanMarkRed.visible = false
 							$AIMarkRed.visible = true
 							optionalButtonRed = Color.gray
 						else:
-							playerSettings[0][0] = ENUMS.PLAYER_TYPE.HUMAN
+							Settings.PLAYERS_SETTINGS[0][0] = ENUMS.PLAYER_TYPE.HUMAN
 							$HumanMarkRed.visible = true
 							$AIMarkRed.visible = false
 							optionalButtonRed = Color.webgray
 					1:
-						if playerSettings[1][0] == ENUMS.PLAYER_TYPE.HUMAN:
-							playerSettings[1][0] = ENUMS.PLAYER_TYPE.AI
+						if Settings.PLAYERS_SETTINGS[1][0] == ENUMS.PLAYER_TYPE.HUMAN:
+							Settings.PLAYERS_SETTINGS[1][0] = ENUMS.PLAYER_TYPE.AI
 							$HumanMarkBlue.visible = false
 							$AIMarkBlue.visible = true
 							optionalButtonBlue = Color.gray
 						else:
-							playerSettings[1][0] = ENUMS.PLAYER_TYPE.HUMAN
+							Settings.PLAYERS_SETTINGS[1][0] = ENUMS.PLAYER_TYPE.HUMAN
 							$HumanMarkBlue.visible = true
 							$AIMarkBlue.visible = false
 							optionalButtonBlue = Color.webgray
 					2:
-						if playerSettings[2][0] == ENUMS.PLAYER_TYPE.HUMAN:
-							playerSettings[2][0] = ENUMS.PLAYER_TYPE.AI
+						if Settings.PLAYERS_SETTINGS[2][0] == ENUMS.PLAYER_TYPE.HUMAN:
+							Settings.PLAYERS_SETTINGS[2][0] = ENUMS.PLAYER_TYPE.AI
 							$HumanMarkGreen.visible = false
 							$AIMarkGreen.visible = true
 							optionalButtonGreen = Color.gray
 						else:
-							playerSettings[2][0] = ENUMS.PLAYER_TYPE.HUMAN
+							Settings.PLAYERS_SETTINGS[2][0] = ENUMS.PLAYER_TYPE.HUMAN
 							$HumanMarkGreen.visible = true
 							$AIMarkGreen.visible = false
 							optionalButtonGreen = Color.webgray
 					3:
-						if playerSettings[3][0] == ENUMS.PLAYER_TYPE.HUMAN:
-							playerSettings[3][0] = ENUMS.PLAYER_TYPE.AI
+						if Settings.PLAYERS_SETTINGS[3][0] == ENUMS.PLAYER_TYPE.HUMAN:
+							Settings.PLAYERS_SETTINGS[3][0] = ENUMS.PLAYER_TYPE.AI
 							$HumanMarkYellow.visible = false
 							$AIMarkYellow.visible = true
 							optionalButtonYellow = Color.gray
 						else:
-							playerSettings[3][0] = ENUMS.PLAYER_TYPE.HUMAN
+							Settings.PLAYERS_SETTINGS[3][0] = ENUMS.PLAYER_TYPE.HUMAN
 							$HumanMarkYellow.visible = true
 							$AIMarkYellow.visible = false
 							optionalButtonYellow = Color.webgray
@@ -218,105 +210,105 @@ func _input(event):
 						match $StrategyRed/Text.text:
 							"SOLO":
 								$StrategyRed/Text.text = "BALANCED"
-								playerSettings[0][1] = ENUMS.AI_STRATEGY.BALANCED
+								Settings.PLAYERS_SETTINGS[0][1] = ENUMS.AI_STRATEGY.BALANCED
 							"BALANCED":
 								$StrategyRed/Text.text = "RANDOM"
-								playerSettings[0][1] = ENUMS.AI_STRATEGY.RANDOM
+								Settings.PLAYERS_SETTINGS[0][1] = ENUMS.AI_STRATEGY.RANDOM
 							"RANDOM":
 								$StrategyRed/Text.text = "SOLO"
-								playerSettings[0][1] = ENUMS.AI_STRATEGY.SOLO
+								Settings.PLAYERS_SETTINGS[0][1] = ENUMS.AI_STRATEGY.SOLO
 					1:
 						match $StrategyBlue/Text.text:
 							"SOLO":
 								$StrategyBlue/Text.text = "BALANCED"
-								playerSettings[1][1] = ENUMS.AI_STRATEGY.BALANCED
+								Settings.PLAYERS_SETTINGS[1][1] = ENUMS.AI_STRATEGY.BALANCED
 							"BALANCED":
 								$StrategyBlue/Text.text = "RANDOM"
-								playerSettings[1][1] = ENUMS.AI_STRATEGY.RANDOM
+								Settings.PLAYERS_SETTINGS[1][1] = ENUMS.AI_STRATEGY.RANDOM
 							"RANDOM":
 								$StrategyBlue/Text.text = "SOLO"
-								playerSettings[1][1] = ENUMS.AI_STRATEGY.SOLO
+								Settings.PLAYERS_SETTINGS[1][1] = ENUMS.AI_STRATEGY.SOLO
 					2:
 						match $StrategyGreen/Text.text:
 							"SOLO":
 								$StrategyGreen/Text.text = "BALANCED"
-								playerSettings[2][1] = ENUMS.AI_STRATEGY.BALANCED
+								Settings.PLAYERS_SETTINGS[2][1] = ENUMS.AI_STRATEGY.BALANCED
 							"BALANCED":
 								$StrategyGreen/Text.text = "RANDOM"
-								playerSettings[2][1] = ENUMS.AI_STRATEGY.RANDOM
+								Settings.PLAYERS_SETTINGS[2][1] = ENUMS.AI_STRATEGY.RANDOM
 							"RANDOM":
 								$StrategyGreen/Text.text = "SOLO"
-								playerSettings[2][1] = ENUMS.AI_STRATEGY.SOLO
+								Settings.PLAYERS_SETTINGS[2][1] = ENUMS.AI_STRATEGY.SOLO
 					3:
 						match $StrategyYellow/Text.text:
 							"SOLO":
 								$StrategyYellow/Text.text = "BALANCED"
-								playerSettings[3][1] = ENUMS.AI_STRATEGY.BALANCED
+								Settings.PLAYERS_SETTINGS[3][1] = ENUMS.AI_STRATEGY.BALANCED
 							"BALANCED":
 								$StrategyYellow/Text.text = "RANDOM"
-								playerSettings[3][1] = ENUMS.AI_STRATEGY.RANDOM
+								Settings.PLAYERS_SETTINGS[3][1] = ENUMS.AI_STRATEGY.RANDOM
 							"RANDOM":
 								$StrategyYellow/Text.text = "SOLO"
-								playerSettings[3][1] = ENUMS.AI_STRATEGY.SOLO
+								Settings.PLAYERS_SETTINGS[3][1] = ENUMS.AI_STRATEGY.SOLO
 			3:
 				match selected_player:
 					0:
-						if playerSettings[0][2]:
-							playerSettings[0][2] = false
+						if Settings.PLAYERS_SETTINGS[0][2]:
+							Settings.PLAYERS_SETTINGS[0][2] = false
 							$OptionOneRed/Text.text = "ALWAYS HIT: OFF"
 						else:
-							playerSettings[0][2] = true
+							Settings.PLAYERS_SETTINGS[0][2] = true
 							$OptionOneRed/Text.text = "ALWAYS HIT: ON"
 					1:
-						if playerSettings[1][2]:
-							playerSettings[1][2] = false
+						if Settings.PLAYERS_SETTINGS[1][2]:
+							Settings.PLAYERS_SETTINGS[1][2] = false
 							$OptionOneBlue/Text.text = "ALWAYS HIT: OFF"
 						else:
-							playerSettings[1][2] = true
+							Settings.PLAYERS_SETTINGS[1][2] = true
 							$OptionOneBlue/Text.text = "ALWAYS HIT: ON"
 					2:
-						if playerSettings[2][2]:
-							playerSettings[2][2] = false
+						if Settings.PLAYERS_SETTINGS[2][2]:
+							Settings.PLAYERS_SETTINGS[2][2] = false
 							$OptionOneGreen/Text.text = "ALWAYS HIT: OFF"
 						else:
-							playerSettings[2][2] = true
+							Settings.PLAYERS_SETTINGS[2][2] = true
 							$OptionOneGreen/Text.text = "ALWAYS HIT: ON"
 					3:
-						if playerSettings[3][2]:
-							playerSettings[3][2] = false
+						if Settings.PLAYERS_SETTINGS[3][2]:
+							Settings.PLAYERS_SETTINGS[3][2] = false
 							$OptionOneYellow/Text.text = "ALWAYS HIT: OFF"
 						else:
-							playerSettings[3][2] = true
+							Settings.PLAYERS_SETTINGS[3][2] = true
 							$OptionOneYellow/Text.text = "ALWAYS HIT: ON"
 			4:
 				match selected_player:
 					0:
-						if playerSettings[0][3]:
-							playerSettings[0][3] = false
+						if Settings.PLAYERS_SETTINGS[0][3]:
+							Settings.PLAYERS_SETTINGS[0][3] = false
 							$OptionTwoRed/Text.text = "ALWAYS LEAVE: OFF"
 						else:
-							playerSettings[0][3] = true
+							Settings.PLAYERS_SETTINGS[0][3] = true
 							$OptionTwoRed/Text.text = "ALWAYS LEAVE: ON"
 					1:
-						if playerSettings[1][3]:
-							playerSettings[1][3] = false
+						if Settings.PLAYERS_SETTINGS[1][3]:
+							Settings.PLAYERS_SETTINGS[1][3] = false
 							$OptionTwoBlue/Text.text = "ALWAYS LEAVE: OFF"
 						else:
-							playerSettings[1][3] = true
+							Settings.PLAYERS_SETTINGS[1][3] = true
 							$OptionTwoBlue/Text.text = "ALWAYS LEAVE: ON"
 					2:
-						if playerSettings[2][3]:
-							playerSettings[2][3] = false
+						if Settings.PLAYERS_SETTINGS[2][3]:
+							Settings.PLAYERS_SETTINGS[2][3] = false
 							$OptionTwoGreen/Text.text = "ALWAYS LEAVE: OFF"
 						else:
-							playerSettings[2][3] = true
+							Settings.PLAYERS_SETTINGS[2][3] = true
 							$OptionTwoGreen/Text.text = "ALWAYS LEAVE: ON"
 					3:
-						if playerSettings[3][3]:
-							playerSettings[3][3] = false
+						if Settings.PLAYERS_SETTINGS[3][3]:
+							Settings.PLAYERS_SETTINGS[3][3] = false
 							$OptionTwoYellow/Text.text = "ALWAYS LEAVE: OFF"
 						else:
-							playerSettings[3][3] = true
+							Settings.PLAYERS_SETTINGS[3][3] = true
 							$OptionTwoYellow/Text.text = "ALWAYS LEAVE: ON"
 			5:
 				get_tree().quit()

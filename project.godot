@@ -10,11 +10,6 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Reference",
-"class": "ARRAYS",
-"language": "GDScript",
-"path": "res://consts/ARRAYS.gd"
-}, {
-"base": "Reference",
 "class": "CONSTS",
 "language": "GDScript",
 "path": "res://consts/CONSTS.gd"
@@ -25,7 +20,6 @@ _global_script_classes=[ {
 "path": "res://consts/ENUMS.gd"
 } ]
 _global_script_class_icons={
-"ARRAYS": "",
 "CONSTS": "",
 "ENUMS": ""
 }
@@ -35,6 +29,10 @@ _global_script_class_icons={
 config/name="Ludo Game"
 run/main_scene="res://scenes/PlayerSelection.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+Settings="*res://scripts/Settings.gd"
 
 [display]
 
