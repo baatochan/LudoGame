@@ -124,6 +124,7 @@ func change_menu_color():
 # ================================================== #
 
 func _ready():
+	resetPlayerSettings() # todo: get rid of it when drawing this scene will take into account already set settings
 	object_features_init()
 	change_menu_color()
 
@@ -317,3 +318,10 @@ func _unhandled_input(event):
 	if event is InputEventKey:
 		if event.pressed and event.scancode == KEY_ESCAPE:
 			get_tree().quit()
+
+func resetPlayerSettings(): # todo: get rid of it when drawing this scene will take into account already set settings
+	Settings.PLAYERS_SETTINGS = [
+		[ENUMS.PLAYER_TYPE.HUMAN, ENUMS.AI_STRATEGY.SOLO, false, false],
+		[ENUMS.PLAYER_TYPE.HUMAN, ENUMS.AI_STRATEGY.SOLO, false, false],
+		[ENUMS.PLAYER_TYPE.HUMAN, ENUMS.AI_STRATEGY.SOLO, false, false],
+		[ENUMS.PLAYER_TYPE.HUMAN, ENUMS.AI_STRATEGY.SOLO, false, false]]
