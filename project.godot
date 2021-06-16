@@ -46,7 +46,8 @@ window/stretch/aspect="expand"
 
 [global]
 
-ENUMS=false
+ENUMS=true
+ARRAYS=true
 
 [input]
 
