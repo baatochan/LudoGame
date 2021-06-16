@@ -53,6 +53,9 @@ func sendToHome():
 func isPawnOnBoard():
 	return (pawnPlace == ENUMS.PAWN_PLACE.BOARD)
 
+func isPawnInHome():
+	return (pawnPlace == ENUMS.PAWN_PLACE.HOME)
+
 func spawnLabel():
 	label = Label.new()
 	label.set_text(str(pawnId + 1))
