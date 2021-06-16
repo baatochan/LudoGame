@@ -15,7 +15,7 @@ func _ready():
 	playerPositions.resize(40) # fill array of player positions with nulls
 	spawnPlayers()
 	updateTurnStateLabels()
-	yield(get_tree().create_timer(1.0), "timeout") # without that starting the scene with spacebar starts the game
+	yield(get_tree().create_timer(1.0), "timeout") # without that starting the scene with spacebar starts the game # todo: find a proper solution to ignore that input
 	GAME_STATE = ENUMS.GAME_STATE.NOT_STARTED
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -24,7 +24,8 @@ func _process(_delta): # _delta - _ to suppress compulator warning about param n
 		nextPlayer()
 
 	if Input.is_action_just_pressed("ui_cancel"):
-		get_tree().change_scene("res://scenes/PlayerSelection.tscn")
+		if get_tree().change_scene("res://scenes/PlayerSelection.tscn") != OK:
+			print ("An unexpected error occured when trying to switch to the PlayerSelection scene")
 
 	if players[PLAYER_TURN].shouldDiceStartRolling == true:
 		if (GAME_STATE == ENUMS.GAME_STATE.NOT_STARTED):
