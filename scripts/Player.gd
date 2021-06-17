@@ -133,6 +133,7 @@ func checkIfHittingIsPossible():
 	for p in range(4):
 		if pawns[p].isPawnInHome() && board.diceResult == 6:
 			if checkIfPositionIsOccupied(pawns[p].startPosition, pawns[p].id):
+				choosenPawn = p
 				return true
 		elif checkIfPositionIsOccupied(pawns[p].currentPosition + board.diceResult, pawns[p].id):
 			choosenPawn = p
