@@ -73,6 +73,14 @@ func isAnyPawnOnBoard():
 	if (pawns[3].isPawnOnBoard()): val = true
 	return val
 
+func isAnyPawnInHome():
+	var val = false
+	if (pawns[0].isPawnInHome()): val = true
+	if (pawns[1].isPawnInHome()): val = true
+	if (pawns[2].isPawnInHome()): val = true
+	if (pawns[3].isPawnInHome()): val = true
+	return val
+
 func areAllPawnsFinished():
 	return (
 		pawns[0].pawnPlace == ENUMS.PAWN_PLACE.FINAL and
@@ -102,10 +110,11 @@ func selectPawnByAI(timer):
 			if checkIfHittingIsPossible():
 				return
 		elif (alwaysLeave):
-			if board.diceResult == 6:
-				var isSelected = selectPawnToLeaveHome()
-				if isSelected:
-					return
+			if isAnyPawnInHome():
+				if board.diceResult == 6:
+					var isSelected = selectPawnToLeaveHome()
+					if isSelected:
+						return
 		else:
 			match PLAYER_STRATEGY:
 				# to be implemented
@@ -114,12 +123,27 @@ func selectPawnByAI(timer):
 					# should be removed when correct strategies are implemented and repleced with one of the correct strategies
 					selectPawnUsingFallbackStrategy()
 
+func checkIfPositionIsOccupied(position, ally):
+	if board.playerPositions[position].PLAYER_TURN != ally:
+		return true
+	else:
+		return false
+
 func checkIfHittingIsPossible():
-	# to be implemented
+	for p in range(4):
+		if pawns[p].isPawnInHome() && board.diceResult == 6:
+			if checkIfPositionIsOccupied(pawns[p].startPosition, pawns[p].id):
+				return true
+		elif checkIfPositionIsOccupied(pawns[p].currentPosition + board.diceResult, pawns[p].id):
+			choosenPawn = p
+			return true
 	return false
 
 func selectPawnToLeaveHome():
-	# to be implemented
+	for p in range(4):
+		if pawns[p].isPawnInHome():
+			choosenPawn = p
+			return true
 	return false
 
 # should be removed when correct strategies are implemented
