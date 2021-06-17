@@ -108,7 +108,12 @@ func selectPawnByAI(timer):
 					return
 		else:
 			match PLAYER_STRATEGY:
-				# to be implemented
+				ENUMS.AI_STRATEGY.SOLO:
+					selectPawnUsingSoloStrategy()
+				ENUMS.AI_STRATEGY.BALANCED:
+					selectPawnUsingBalancedStrategy()
+				ENUMS.AI_STRATEGY.RANDOM:
+					selectPawnUsingRandomStrategy()
 				_:
 					print("Player strategy is not a valid enum value, using fallback strategy")
 					# should be removed when correct strategies are implemented and repleced with one of the correct strategies
@@ -134,3 +139,12 @@ func selectPawnUsingFallbackStrategy():
 		while (not pawns[choosen].isPawnInHome()):
 			choosen = randi() % 4
 		choosenPawn = choosen
+
+func selectPawnUsingSoloStrategy():
+	pass
+
+func selectPawnUsingBalancedStrategy():
+	pass
+
+func selectPawnUsingRandomStrategy():
+	pass
