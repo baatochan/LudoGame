@@ -73,6 +73,14 @@ func isAnyPawnOnBoard():
 	if (pawns[3].isPawnOnBoard()): val = true
 	return val
 
+func isAnyPawnInHome():
+	var val = false
+	if (pawns[0].isPawnInHome()): val = true
+	if (pawns[1].isPawnInHome()): val = true
+	if (pawns[2].isPawnInHome()): val = true
+	if (pawns[3].isPawnInHome()): val = true
+	return val
+
 func areAllPawnsFinished():
 	return (
 		pawns[0].pawnPlace == ENUMS.PAWN_PLACE.FINAL and
@@ -98,14 +106,10 @@ func selectPawnByAI(timer):
 		if timer > 0:
 			yield(get_tree().create_timer(timer), "timeout")
 
-		if (alwaysHit):
-			if checkIfHittingIsPossible():
-				return
-		elif (alwaysLeave):
-			if board.diceResult == 6:
-				var isSelected = selectPawnToLeaveHome()
-				if isSelected:
-					return
+		if alwaysHit && checkIfHittingIsPossible():
+			return
+		elif alwaysLeave && isAnyPawnInHome() && board.diceResult == 6 && selectPawnToLeaveHome():
+			return
 		else:
 			match PLAYER_STRATEGY:
 				ENUMS.AI_STRATEGY.SOLO:
@@ -119,12 +123,33 @@ func selectPawnByAI(timer):
 					# should be removed when correct strategies are implemented and repleced with one of the correct strategies
 					selectPawnUsingFallbackStrategy()
 
+func checkIfPositionIsOccupied(position, ally):
+	if position >= 40:
+		position -= 40
+	if board.playerPositions[position] != null:
+		if board.playerPositions[position].x != ally:
+			return true
+	
+	return false
+
 func checkIfHittingIsPossible():
-	# to be implemented
+	for p in range(4):
+		if pawns[p].isPawnInHome() && board.diceResult == 6:
+			if checkIfPositionIsOccupied(pawns[p].startPosition, pawns[p].playerId):
+				choosenPawn = p
+				return true
+		elif checkIfPositionIsOccupied(pawns[p].distanceFromStart + board.diceResult, pawns[p].playerId):
+			choosenPawn = p
+			return true
+	
 	return false
 
 func selectPawnToLeaveHome():
-	# to be implemented
+	for p in range(4):
+		if pawns[p].isPawnInHome():
+			choosenPawn = p
+			return true
+	
 	return false
 
 # should be removed when correct strategies are implemented
