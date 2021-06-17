@@ -106,15 +106,10 @@ func selectPawnByAI(timer):
 		if timer > 0:
 			yield(get_tree().create_timer(timer), "timeout")
 
-		if (alwaysHit):
-			if checkIfHittingIsPossible():
-				return
-		elif (alwaysLeave):
-			if isAnyPawnInHome():
-				if board.diceResult == 6:
-					var isSelected = selectPawnToLeaveHome()
-					if isSelected:
-						return
+		if alwaysHit && checkIfHittingIsPossible():
+			return
+		elif alwaysLeave && isAnyPawnInHome() && board.diceResult == 6 && selectPawnToLeaveHome():
+			return
 		else:
 			match PLAYER_STRATEGY:
 				# to be implemented
@@ -124,20 +119,24 @@ func selectPawnByAI(timer):
 					selectPawnUsingFallbackStrategy()
 
 func checkIfPositionIsOccupied(position, ally):
-	if board.playerPositions[position].PLAYER_TURN != ally:
-		return true
-	else:
-		return false
+	if position >= 40:
+		position -= 40
+	if board.playerPositions[position] != null:
+		if board.playerPositions[position].x != ally:
+			return true
+	
+	return false
 
 func checkIfHittingIsPossible():
 	for p in range(4):
 		if pawns[p].isPawnInHome() && board.diceResult == 6:
-			if checkIfPositionIsOccupied(pawns[p].startPosition, pawns[p].id):
+			if checkIfPositionIsOccupied(pawns[p].startPosition, pawns[p].playerId):
 				choosenPawn = p
 				return true
-		elif checkIfPositionIsOccupied(pawns[p].currentPosition + board.diceResult, pawns[p].id):
+		elif checkIfPositionIsOccupied(pawns[p].distanceFromStart + board.diceResult, pawns[p].playerId):
 			choosenPawn = p
 			return true
+	
 	return false
 
 func selectPawnToLeaveHome():
@@ -145,6 +144,7 @@ func selectPawnToLeaveHome():
 		if pawns[p].isPawnInHome():
 			choosenPawn = p
 			return true
+	
 	return false
 
 # should be removed when correct strategies are implemented
