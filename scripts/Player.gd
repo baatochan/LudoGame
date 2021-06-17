@@ -141,7 +141,44 @@ func selectPawnUsingFallbackStrategy():
 		choosenPawn = choosen
 
 func selectPawnUsingSoloStrategy():
-	pass
+	if (isAnyPawnOnBoard()):
+		selectTheFurthestPawn()
+	else:
+		if board.diceResult == 6:
+			selectFirstPawnFromHome()
+		else:
+			fallbackToFallbackStrategy("solo (1)")
+
+func selectTheFurthestPawn():
+	var status = getPawnStatus()
+	var furthestDistance = -1
+	var furthestPawn = -1
+	for pawnId in range(4):
+		if status[pawnId].x == ENUMS.PAWN_PLACE.BOARD:
+			if furthestDistance < status[pawnId].y:
+				furthestDistance = status[pawnId].y
+				furthestPawn = pawnId
+	if furthestPawn != -1:
+		choosenPawn = furthestPawn
+	else:
+		fallbackToFallbackStrategy("solo (2)")
+
+func getPawnStatus():
+	var status = []
+	for pawnId in range(4):
+		status.append(Vector2(pawns[pawnId].pawnPlace, pawns[pawnId].distanceFromStart))
+	return status
+
+func fallbackToFallbackStrategy(strategyName):
+	print("ERROR: "  + str(strategyName) + " strategy had a problem and stopped working, using fallback strategy")
+	selectPawnUsingFallbackStrategy()
+
+func selectFirstPawnFromHome():
+	for pawnId in range(4):
+		if pawns[pawnId].isPawnInHome():
+			choosenPawn = pawnId
+			return
+	fallbackToFallbackStrategy("solo (3)")
 
 func selectPawnUsingBalancedStrategy():
 	pass
