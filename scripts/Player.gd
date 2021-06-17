@@ -173,6 +173,7 @@ func fallbackToFallbackStrategy(strategyName):
 	print("ERROR: "  + str(strategyName) + " strategy had a problem and stopped working, using fallback strategy")
 	selectPawnUsingFallbackStrategy()
 
+# switch for selectPawnToLeaveHome
 func selectFirstPawnFromHome():
 	for pawnId in range(4):
 		if pawns[pawnId].isPawnInHome():
