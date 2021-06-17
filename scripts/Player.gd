@@ -151,7 +151,7 @@ func selectPawnUsingSoloStrategy():
 
 func selectTheFurthestPawn():
 	var status = getPawnStatus()
-	var furthestDistance = -1
+	var furthestDistance = -11
 	var furthestPawn = -1
 	for pawnId in range(4):
 		if status[pawnId].x == ENUMS.PAWN_PLACE.BOARD:
