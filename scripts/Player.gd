@@ -214,4 +214,26 @@ func selectTheNearestPawnFromBoard():
 		fallbackToFallbackStrategy("balanced (1)")
 
 func selectPawnUsingRandomStrategy():
-	pass
+	if board.diceResult == 6:
+		if isAnyPawnOnBoard():
+			var leaveChance = randi() % 2
+			if leaveChance == 0:
+				selectRandomPawnFromHome()
+			else:
+				selectRandomPawnFromBoard()
+		else:
+			selectRandomPawnFromHome()
+	else:
+		selectRandomPawnFromBoard()
+
+func selectRandomPawnFromHome():
+	var choosen = randi() % 4 # rand int, range [0, 3]
+	while (not pawns[choosen].isPawnInHome()):
+		choosen = randi() % 4
+	choosenPawn = choosen
+
+func selectRandomPawnFromBoard():
+	var choosen = randi() % 4 # rand int, range [0, 3]
+	while (not pawns[choosen].isPawnOnBoard()):
+		choosen = randi() % 4
+	choosenPawn = choosen
