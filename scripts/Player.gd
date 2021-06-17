@@ -181,7 +181,37 @@ func selectFirstPawnFromHome():
 	fallbackToFallbackStrategy("solo (3)")
 
 func selectPawnUsingBalancedStrategy():
-	pass
+	if board.diceResult == 6:
+		selectTheNearestPawn()
+	else:
+		selectTheNearestPawnFromBoard()
+
+func selectTheNearestPawn():
+	var status = getPawnStatus()
+	var nearestDistance = 40
+	var nearestPawn = -1
+	for pawnId in range(4):
+		if nearestDistance > status[pawnId].y:
+			nearestDistance = status[pawnId].y
+			nearestPawn = pawnId
+	if nearestPawn != -1:
+		choosenPawn = nearestPawn
+	else:
+		fallbackToFallbackStrategy("balanced (1)")
+
+func selectTheNearestPawnFromBoard():
+	var status = getPawnStatus()
+	var nearestDistance = 40
+	var nearestPawn = -1
+	for pawnId in range(4):
+		if status[pawnId].x == ENUMS.PAWN_PLACE.BOARD:
+			if nearestDistance > status[pawnId].y:
+				nearestDistance = status[pawnId].y
+				nearestPawn = pawnId
+	if nearestPawn != -1:
+		choosenPawn = nearestPawn
+	else:
+		fallbackToFallbackStrategy("balanced (1)")
 
 func selectPawnUsingRandomStrategy():
 	pass
