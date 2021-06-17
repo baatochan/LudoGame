@@ -154,7 +154,7 @@ func selectTheFurthestPawn():
 	var furthestDistance = -11
 	var furthestPawn = -1
 	for pawnId in range(4):
-		if status[pawnId].x == ENUMS.PAWN_PLACE.BOARD:
+		if pawns[pawnId].isPawnOnBoard():
 			if furthestDistance < status[pawnId].y:
 				furthestDistance = status[pawnId].y
 				furthestPawn = pawnId
@@ -204,7 +204,7 @@ func selectTheNearestPawnFromBoard():
 	var nearestDistance = 40
 	var nearestPawn = -1
 	for pawnId in range(4):
-		if status[pawnId].x == ENUMS.PAWN_PLACE.BOARD:
+		if pawns[pawnId].isPawnOnBoard():
 			if nearestDistance > status[pawnId].y:
 				nearestDistance = status[pawnId].y
 				nearestPawn = pawnId
