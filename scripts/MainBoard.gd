@@ -1,6 +1,6 @@
 extends Node2D
 
-var players = [] # array of players (filled during aspawn players)
+var players = [] # array of players (filled during spawn players)
 var playerPositions = [] # array with every 40 positions and values Vector2(playerId, pawnId) or NULL (if position is not occupied)
 
 var GAME_STATE = ENUMS.GAME_STATE.LOADING
