@@ -145,11 +145,10 @@ func checkIfHittingIsPossible():
 	return false
 
 func selectPawnToLeaveHome():
-	for p in range(4):
-		if pawns[p].isPawnInHome():
-			choosenPawn = p
+	for pawnId in range(4):
+		if pawns[pawnId].isPawnInHome():
+			choosenPawn = pawnId
 			return true
-
 	return false
 
 # should be removed when correct strategies are implemented
@@ -170,7 +169,9 @@ func selectPawnUsingSoloStrategy():
 		selectTheFurthestPawn()
 	else:
 		if board.diceResult == 6:
-			selectFirstPawnFromHome()
+			var isSelected = selectPawnToLeaveHome()
+			if (not isSelected):
+				fallbackToFallbackStrategy("solo (3)")
 		else:
 			fallbackToFallbackStrategy("solo (1)")
 
@@ -199,13 +200,6 @@ func fallbackToFallbackStrategy(strategyName):
 	var status = getPawnStatus()
 	print("ERRPR: pawnPositions: 1 - " + str(status[0]) + ", 2 - " + str(status[1]) + ", 3 - " + str(status[2]) + ", 4 - " + str(status[3]))
 	selectPawnUsingFallbackStrategy()
-
-func selectFirstPawnFromHome():
-	for pawnId in range(4):
-		if pawns[pawnId].isPawnInHome():
-			choosenPawn = pawnId
-			return
-	fallbackToFallbackStrategy("solo (3)")
 
 func selectPawnUsingBalancedStrategy():
 	if board.diceResult == 6:
