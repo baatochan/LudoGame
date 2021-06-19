@@ -119,7 +119,7 @@ func selectPawnByAI(timer):
 				ENUMS.AI_STRATEGY.RANDOM:
 					selectPawnUsingRandomStrategy()
 				_:
-					print("Player strategy is not a valid enum value, using fallback strategy")
+					print("ERROR: Player strategy is not a valid enum value, using fallback strategy")
 					# should be removed when correct strategies are implemented and repleced with one of the correct strategies
 					selectPawnUsingFallbackStrategy()
 		printDebug()
