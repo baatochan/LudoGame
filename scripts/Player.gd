@@ -196,6 +196,8 @@ func getPawnStatus():
 
 func fallbackToFallbackStrategy(strategyName):
 	print("ERROR: "  + str(strategyName) + " strategy had a problem and stopped working, using fallback strategy")
+	var status = getPawnStatus()
+	print("ERRPR: pawnPositions: 1 - " + str(status[0]) + ", 2 - " + str(status[1]) + ", 3 - " + str(status[2]) + ", 4 - " + str(status[3]))
 	selectPawnUsingFallbackStrategy()
 
 func selectFirstPawnFromHome():
@@ -239,17 +241,18 @@ func selectTheNearestPawnFromBoard():
 		fallbackToFallbackStrategy("balanced (1)")
 
 func selectPawnUsingRandomStrategy():
-	if board.diceResult == 6:
-		if isAnyPawnOnBoard():
-			var leaveChance = randi() % 2
-			if leaveChance == 0:
-				selectRandomPawnFromHome()
-			else:
-				selectRandomPawnFromBoard()
-		else:
+	if board.diceResult == 6 && isAnyPawnOnBoard() && isAnyPawnInHome():
+		var leaveChance = randi() % 2
+		if leaveChance == 0:
 			selectRandomPawnFromHome()
-	else:
+		else:
+			selectRandomPawnFromBoard()
+	elif board.diceResult == 6 && isAnyPawnInHome():
+		selectRandomPawnFromHome()
+	elif isAnyPawnOnBoard():
 		selectRandomPawnFromBoard()
+	else:
+		fallbackToFallbackStrategy("random (1)")
 
 func selectRandomPawnFromHome():
 	var choosen = randi() % 4 # rand int, range [0, 3]
