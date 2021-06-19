@@ -76,6 +76,7 @@ func anotherRoll():
 	players[PLAYER_TURN].PLAYER_STATE = ENUMS.PLAYER_STATE.NEW_TURN
 	TURN_STATE = ENUMS.TURN_STATE.ROLLING
 	updateTurnStateLabels()
+	printDebug()
 
 func nextPlayer():
 	players[PLAYER_TURN].PLAYER_STATE = ENUMS.PLAYER_STATE.NEW_TURN
@@ -85,6 +86,7 @@ func nextPlayer():
 		PLAYER_TURN = 0
 	updatePlayerLabel()
 	updateTurnStateLabels()
+	printDebug()
 
 func movePawn(var pawn, var numberToMove = diceResult):
 	var selectedPawn = players[PLAYER_TURN].pawns[pawn]
@@ -148,3 +150,7 @@ func updateTurnStateLabels(var state = TURN_STATE):
 func setWinningPlayer(var player = PLAYER_TURN):
 	$MainLabelNode/Label.text = "Player " + str(player + 1) + " won!"
 	$MainLabelNode/Label.add_color_override("font_color", CONSTS.FIELDS_COLORS[player])
+
+func printDebug():
+	if CONSTS.IS_DEBUG:
+		print("\n\n")

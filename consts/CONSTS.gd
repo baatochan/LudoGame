@@ -73,9 +73,13 @@ const FIELDS_CORDS = [
 	Vector2(961, 1008)
 ]
 
+# time frames of wait timers for ai moves
 const MIN_START_GAME_WAIT_TIMER = 1.5
 const MAX_START_GAME_WAIT_TIMER = 4.0
 const MIN_ROLL_WAIT_TIMER = 0.2
 const MAX_ROLL_WAIT_TIMER = 1.2
 const MIN_MOVE_WAIT_TIMER = 0.5
 const MAX_MOVE_WAIT_TIMER = 2.0
+
+# debug prints
+const IS_DEBUG = false

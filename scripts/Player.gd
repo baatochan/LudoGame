@@ -122,6 +122,7 @@ func selectPawnByAI(timer):
 					print("Player strategy is not a valid enum value, using fallback strategy")
 					# should be removed when correct strategies are implemented and repleced with one of the correct strategies
 					selectPawnUsingFallbackStrategy()
+		printDebug()
 
 func checkIfHittingIsPossible():
 	for pawnId in range(4):
@@ -156,6 +157,7 @@ func selectPawnUsingFallbackStrategy():
 		choosenPawn = choosen
 
 func selectPawnUsingSoloStrategy():
+	printDebug()
 	if (isAnyPawnOnBoard()):
 		selectTheFurthestPawn()
 	else:
@@ -188,11 +190,11 @@ func getPawnStatus():
 
 func fallbackToFallbackStrategy(strategyName):
 	print("ERROR: "  + str(strategyName) + " strategy had a problem and stopped working, using fallback strategy")
-	var status = getPawnStatus()
-	print("ERRPR: pawnPositions: 1 - " + str(status[0]) + ", 2 - " + str(status[1]) + ", 3 - " + str(status[2]) + ", 4 - " + str(status[3]))
+	printDebug(true)
 	selectPawnUsingFallbackStrategy()
 
 func selectPawnUsingBalancedStrategy():
+	printDebug()
 	if board.diceResult == 6:
 		selectTheNearestPawn()
 	else:
@@ -226,6 +228,7 @@ func selectTheNearestPawnFromBoard():
 		fallbackToFallbackStrategy("balanced (1)")
 
 func selectPawnUsingRandomStrategy():
+	printDebug()
 	if board.diceResult == 6 && isAnyPawnOnBoard() && isAnyPawnInHome():
 		var leaveChance = randi() % 2
 		if leaveChance == 0:
@@ -250,3 +253,9 @@ func selectRandomPawnFromBoard():
 	while (not pawns[choosen].isPawnOnBoard()):
 		choosen = randi() % 4
 	choosenPawn = choosen
+
+func printDebug(printAnyway = false):
+	if CONSTS.IS_DEBUG or printAnyway:
+		var status = getPawnStatus()
+		print("DEBUG: playerId: " + str(id) + "; pawnPositions: 1 - " + str(status[0]) + ", 2 - " + str(status[1]) + ", 3 - " + str(status[2]) + ", 4 - " + str(status[3]))
+		print("DEBUG: selectedPawn: " + str(choosenPawn))
