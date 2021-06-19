@@ -4,7 +4,7 @@ var pawnId
 var playerId
 var currentPosition = null
 var startPosition
-var distanceFromStart = 0
+var distanceFromStart = -10
 var pawnPlace = ENUMS.PAWN_PLACE.HOME
 
 var label
@@ -18,6 +18,7 @@ func move(var numberOfFieldsToMove):
 			currentPosition = startPosition
 			position = CONSTS.FIELDS_CORDS[startPosition]
 			pawnPlace = ENUMS.PAWN_PLACE.BOARD
+			distanceFromStart = 0
 		else:
 			return ENUMS.MOVE_RESULT.NOT_SUCCESSFUL
 	elif (pawnPlace == ENUMS.PAWN_PLACE.FINAL):
@@ -46,7 +47,7 @@ func move(var numberOfFieldsToMove):
 
 func sendToHome():
 	currentPosition = null
-	distanceFromStart = 0
+	distanceFromStart = -10
 	pawnPlace = ENUMS.PAWN_PLACE.HOME
 	position = CONSTS.HOME_CORDS[playerId][pawnId]
 

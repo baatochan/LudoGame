@@ -7,7 +7,7 @@ var diceSideSprites = [
 	preload("res://sprites/dice/side4.png"),
 	preload("res://sprites/dice/side5.png"),
 	preload("res://sprites/dice/side6.png")]
-
+onready var board = get_parent()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -23,7 +23,12 @@ func rollDice(): #async
 		set_texture(diceSideSprites[randomSide])
 		yield(get_tree().create_timer(0.05), "timeout")
 
-	get_parent().diceResult = randomSide + 1
-	get_parent().isDiceRolling = false
-	get_parent().TURN_STATE = ENUMS.TURN_STATE.SELECTING
-	get_parent().updateTurnStateLabels()
+	board.diceResult = randomSide + 1
+	board.isDiceRolling = false
+	board.TURN_STATE = ENUMS.TURN_STATE.SELECTING
+	board.updateTurnStateLabels()
+	printDebug()
+
+func printDebug():
+	if CONSTS.IS_DEBUG:
+		print("DEBUG: diceRes: " + str(board.diceResult))
