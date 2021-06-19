@@ -118,6 +118,18 @@ func checkIfWinning(var player = PLAYER_TURN):
 	else:
 		return false
 
+func checkIfPositionIsOccupied(position, ally):
+	if position < 0:
+		position += 40
+	if position > 39:
+		position -= 40
+
+	if playerPositions[position] != null:
+		if playerPositions[position].x != ally:
+			return true
+	else:
+		return false
+
 func updatePlayerLabel(var player = PLAYER_TURN):
 	$MainLabelNode/Label.text = "Player " + str(player + 1)
 	$MainLabelNode/Label.add_color_override("font_color", CONSTS.FIELDS_COLORS[player])

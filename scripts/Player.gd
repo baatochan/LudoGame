@@ -123,25 +123,16 @@ func selectPawnByAI(timer):
 					# should be removed when correct strategies are implemented and repleced with one of the correct strategies
 					selectPawnUsingFallbackStrategy()
 
-func checkIfPositionIsOccupied(position, ally):
-	if position >= 40:
-		position -= 40
-	if board.playerPositions[position] != null:
-		if board.playerPositions[position].x != ally:
-			return true
-
-	return false
-
 func checkIfHittingIsPossible():
-	for p in range(4):
-		if pawns[p].isPawnInHome() && board.diceResult == 6:
-			if checkIfPositionIsOccupied(pawns[p].startPosition, pawns[p].playerId):
-				choosenPawn = p
+	for pawnId in range(4):
+		if pawns[pawnId].isPawnInHome() && board.diceResult == 6:
+			if board.checkIfPositionIsOccupied(pawns[pawnId].startPosition, id):
+				choosenPawn = pawnId
 				return true
-		elif checkIfPositionIsOccupied(pawns[p].distanceFromStart + board.diceResult, pawns[p].playerId):
-			choosenPawn = p
-			return true
-
+		elif pawns[pawnId].isPawnOnBoard():
+			if board.checkIfPositionIsOccupied(pawns[pawnId].currentPosition + board.diceResult, id):
+				choosenPawn = pawnId
+				return true
 	return false
 
 func selectPawnToLeaveHome():
