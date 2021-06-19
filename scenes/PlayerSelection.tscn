@@ -50,7 +50,7 @@ __meta__ = {
 [node name="PlayerRed" type="Sprite" parent="."]
 position = Vector2( 601.755, 493.165 )
 scale = Vector2( 0.3, 0.3 )
-texture = ExtResource( 7 )
+texture = ExtResource( 6 )
 
 [node name="HumanMarkRed" type="Sprite" parent="."]
 position = Vector2( 566.417, 550.575 )
@@ -130,7 +130,7 @@ valign = 1
 [node name="PlayerBlue" type="Sprite" parent="."]
 position = Vector2( 836.956, 493.165 )
 scale = Vector2( 0.3, 0.3 )
-texture = ExtResource( 8 )
+texture = ExtResource( 7 )
 
 [node name="HumanMarkBlue" type="Sprite" parent="."]
 position = Vector2( 803.093, 551.377 )
@@ -203,7 +203,7 @@ valign = 1
 [node name="PlayerGreen" type="Sprite" parent="."]
 position = Vector2( 1076.39, 493.165 )
 scale = Vector2( 0.3, 0.3 )
-texture = ExtResource( 4 )
+texture = ExtResource( 8 )
 
 [node name="HumanMarkGreen" type="Sprite" parent="."]
 position = Vector2( 1045.82, 550.903 )
@@ -276,7 +276,7 @@ valign = 1
 [node name="PlayerYellow" type="Sprite" parent="."]
 position = Vector2( 1311.6, 493.165 )
 scale = Vector2( 0.3, 0.3 )
-texture = ExtResource( 6 )
+texture = ExtResource( 4 )
 
 [node name="HumanMarkYellow" type="Sprite" parent="."]
 position = Vector2( 1279.47, 552.667 )
