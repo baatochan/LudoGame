@@ -129,7 +129,7 @@ func checkIfPositionIsOccupied(position, ally):
 	if board.playerPositions[position] != null:
 		if board.playerPositions[position].x != ally:
 			return true
-	
+
 	return false
 
 func checkIfHittingIsPossible():
@@ -141,7 +141,7 @@ func checkIfHittingIsPossible():
 		elif checkIfPositionIsOccupied(pawns[p].distanceFromStart + board.diceResult, pawns[p].playerId):
 			choosenPawn = p
 			return true
-	
+
 	return false
 
 func selectPawnToLeaveHome():
@@ -149,7 +149,7 @@ func selectPawnToLeaveHome():
 		if pawns[p].isPawnInHome():
 			choosenPawn = p
 			return true
-	
+
 	return false
 
 # should be removed when correct strategies are implemented
