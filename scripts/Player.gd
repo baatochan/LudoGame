@@ -1,6 +1,6 @@
 extends Node
 
-var id
+var playerId
 var pawns = [] # array of pawns (filled during aspawn pawns)
 var shouldDiceStartRolling = false
 var choosenPawn = null
@@ -19,7 +19,7 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta): # _delta - _ to suppress compulator warning about param never used
-	if board.PLAYER_TURN == id:
+	if board.PLAYER_TURN == playerId:
 		if PLAYER_TYPE == ENUMS.PLAYER_TYPE.AI:
 			if (board.GAME_STATE == ENUMS.GAME_STATE.NOT_STARTED):
 				rollDice(rand_range(CONSTS.MIN_START_GAME_WAIT_TIMER, CONSTS.MAX_START_GAME_WAIT_TIMER))
@@ -55,11 +55,11 @@ func spawnPawns():
 		pawnNode.name = "Pawn " + str(pawnId)
 		pawnNode.script = playerScript
 		pawnNode.pawnId = pawnId
-		pawnNode.playerId = id
-		pawnNode.position = CONSTS.HOME_CORDS[id][pawnId]
+		pawnNode.playerId = playerId
+		pawnNode.position = CONSTS.HOME_CORDS[playerId][pawnId]
 		pawnNode.texture = preload("res://sprites/Player.svg")
-		pawnNode.modulate = CONSTS.PAWNS_COLORS[id]
-		pawnNode.startPosition = CONSTS.START_POSITIONS[id]
+		pawnNode.modulate = CONSTS.PAWNS_COLORS[playerId]
+		pawnNode.startPosition = CONSTS.START_POSITIONS[playerId]
 		# add this sprite to the array
 		pawns.append(pawnNode)
 		# add this sprite to the tree (show it)
@@ -119,7 +119,7 @@ func selectPawnByAI(timer):
 				ENUMS.AI_STRATEGY.RANDOM:
 					selectPawnUsingRandomStrategy()
 				_:
-					print("ERROR: Player strategy is not a valid enum value, using fallback strategy")
+					print("ERROR: Player strategy is not a valplayerId enum value, using fallback strategy")
 					# should be removed when correct strategies are implemented and repleced with one of the correct strategies
 					selectPawnUsingFallbackStrategy()
 		printDebug()
@@ -127,11 +127,11 @@ func selectPawnByAI(timer):
 func checkIfHittingIsPossible():
 	for pawnId in range(4):
 		if pawns[pawnId].isPawnInHome() && board.diceResult == 6:
-			if board.checkIfPositionIsOccupied(pawns[pawnId].startPosition, id):
+			if board.checkIfPositionIsOccupied(pawns[pawnId].startPosition, playerId):
 				choosenPawn = pawnId
 				return true
 		elif pawns[pawnId].isPawnOnBoard():
-			if board.checkIfPositionIsOccupied(pawns[pawnId].currentPosition + board.diceResult, id):
+			if board.checkIfPositionIsOccupied(pawns[pawnId].currentPosition + board.diceResult, playerId):
 				choosenPawn = pawnId
 				return true
 	return false
@@ -257,5 +257,5 @@ func selectRandomPawnFromBoard():
 func printDebug(printAnyway = false):
 	if CONSTS.IS_DEBUG or printAnyway:
 		var status = getPawnStatus()
-		print("DEBUG: playerId: " + str(id) + "; pawnPositions: 1 - " + str(status[0]) + ", 2 - " + str(status[1]) + ", 3 - " + str(status[2]) + ", 4 - " + str(status[3]))
+		print("DEBUG: playerId: " + str(playerId) + "; pawnPositions: 1 - " + str(status[0]) + ", 2 - " + str(status[1]) + ", 3 - " + str(status[2]) + ", 4 - " + str(status[3]))
 		print("DEBUG: selectedPawn: " + str(choosenPawn))

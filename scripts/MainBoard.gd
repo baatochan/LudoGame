@@ -57,7 +57,7 @@ func spawnPlayers():
 		var playerNode = Node.new()
 		playerNode.name = "Player " + str(playerId)
 		playerNode.script = playerScript
-		playerNode.id = playerId
+		playerNode.playerId = playerId
 		playerNode.PLAYER_TYPE = Settings.PLAYERS_SETTINGS[playerId][0]
 		playerNode.PLAYER_STRATEGY = Settings.PLAYERS_SETTINGS[playerId][1]
 		playerNode.alwaysHit = Settings.PLAYERS_SETTINGS[playerId][2]
