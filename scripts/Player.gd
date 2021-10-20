@@ -1,6 +1,6 @@
 extends Node
 
-var id
+var playerId
 var pawns = [] # array of pawns (filled during aspawn pawns)
 var shouldDiceStartRolling = false
 var choosenPawn = null
@@ -19,7 +19,7 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta): # _delta - _ to suppress compulator warning about param never used
-	if board.PLAYER_TURN == id:
+	if board.PLAYER_TURN == playerId:
 		if PLAYER_TYPE == ENUMS.PLAYER_TYPE.AI:
 			if (board.GAME_STATE == ENUMS.GAME_STATE.NOT_STARTED):
 				rollDice(rand_range(CONSTS.MIN_START_GAME_WAIT_TIMER, CONSTS.MAX_START_GAME_WAIT_TIMER))
@@ -55,11 +55,11 @@ func spawnPawns():
 		pawnNode.name = "Pawn " + str(pawnId)
 		pawnNode.script = playerScript
 		pawnNode.pawnId = pawnId
-		pawnNode.playerId = id
-		pawnNode.position = CONSTS.HOME_CORDS[id][pawnId]
+		pawnNode.playerId = playerId
+		pawnNode.position = CONSTS.HOME_CORDS[playerId][pawnId]
 		pawnNode.texture = preload("res://sprites/Player.svg")
-		pawnNode.modulate = CONSTS.PAWNS_COLORS[id]
-		pawnNode.startPosition = CONSTS.START_POSITIONS[id]
+		pawnNode.modulate = CONSTS.PAWNS_COLORS[playerId]
+		pawnNode.startPosition = CONSTS.START_POSITIONS[playerId]
 		# add this sprite to the array
 		pawns.append(pawnNode)
 		# add this sprite to the tree (show it)
@@ -71,6 +71,14 @@ func isAnyPawnOnBoard():
 	if (pawns[1].isPawnOnBoard()): val = true
 	if (pawns[2].isPawnOnBoard()): val = true
 	if (pawns[3].isPawnOnBoard()): val = true
+	return val
+
+func isAnyPawnInHome():
+	var val = false
+	if (pawns[0].isPawnInHome()): val = true
+	if (pawns[1].isPawnInHome()): val = true
+	if (pawns[2].isPawnInHome()): val = true
+	if (pawns[3].isPawnInHome()): val = true
 	return val
 
 func areAllPawnsFinished():
@@ -98,28 +106,41 @@ func selectPawnByAI(timer):
 		if timer > 0:
 			yield(get_tree().create_timer(timer), "timeout")
 
-		if (alwaysHit):
-			if checkIfHittingIsPossible():
-				return
-		elif (alwaysLeave):
-			if board.diceResult == 6:
-				var isSelected = selectPawnToLeaveHome()
-				if isSelected:
-					return
+		if alwaysHit && checkIfHittingIsPossible():
+			return
+		elif alwaysLeave && isAnyPawnInHome() && board.diceResult == 6 && selectPawnToLeaveHome():
+			return
 		else:
 			match PLAYER_STRATEGY:
-				# to be implemented
+				ENUMS.AI_STRATEGY.SOLO:
+					selectPawnUsingSoloStrategy()
+				ENUMS.AI_STRATEGY.BALANCED:
+					selectPawnUsingBalancedStrategy()
+				ENUMS.AI_STRATEGY.RANDOM:
+					selectPawnUsingRandomStrategy()
 				_:
-					print("Player strategy is not a valid enum value, using fallback strategy")
+					print("ERROR: Player strategy is not a valplayerId enum value, using fallback strategy")
 					# should be removed when correct strategies are implemented and repleced with one of the correct strategies
 					selectPawnUsingFallbackStrategy()
+		printDebug()
 
 func checkIfHittingIsPossible():
-	# to be implemented
+	for pawnId in range(4):
+		if pawns[pawnId].isPawnInHome() && board.diceResult == 6:
+			if board.checkIfPositionIsOccupied(pawns[pawnId].startPosition, playerId):
+				choosenPawn = pawnId
+				return true
+		elif pawns[pawnId].isPawnOnBoard():
+			if board.checkIfPositionIsOccupied(pawns[pawnId].currentPosition + board.diceResult, playerId):
+				choosenPawn = pawnId
+				return true
 	return false
 
 func selectPawnToLeaveHome():
-	# to be implemented
+	for pawnId in range(4):
+		if pawns[pawnId].isPawnInHome():
+			choosenPawn = pawnId
+			return true
 	return false
 
 # should be removed when correct strategies are implemented
@@ -134,3 +155,107 @@ func selectPawnUsingFallbackStrategy():
 		while (not pawns[choosen].isPawnInHome()):
 			choosen = randi() % 4
 		choosenPawn = choosen
+
+func selectPawnUsingSoloStrategy():
+	printDebug()
+	if (isAnyPawnOnBoard()):
+		selectTheFurthestPawn()
+	else:
+		if board.diceResult == 6:
+			var isSelected = selectPawnToLeaveHome()
+			if (not isSelected):
+				fallbackToFallbackStrategy("solo (3)")
+		else:
+			fallbackToFallbackStrategy("solo (1)")
+
+func selectTheFurthestPawn():
+	var status = getPawnStatus()
+	var furthestDistance = -11
+	var furthestPawn = null
+	for pawnId in range(4):
+		if pawns[pawnId].isPawnOnBoard():
+			if furthestDistance < status[pawnId].y:
+				furthestDistance = status[pawnId].y
+				furthestPawn = pawnId
+	if furthestPawn != null:
+		choosenPawn = furthestPawn
+	else:
+		fallbackToFallbackStrategy("solo (2)")
+
+func getPawnStatus():
+	var status = []
+	for pawnId in range(4):
+		status.append(Vector2(pawns[pawnId].pawnPlace, pawns[pawnId].distanceFromStart))
+	return status
+
+func fallbackToFallbackStrategy(strategyName):
+	print("ERROR: "  + str(strategyName) + " strategy had a problem and stopped working, using fallback strategy")
+	printDebug(true)
+	selectPawnUsingFallbackStrategy()
+
+func selectPawnUsingBalancedStrategy():
+	printDebug()
+	if board.diceResult == 6:
+		selectTheNearestPawn()
+	else:
+		selectTheNearestPawnFromBoard()
+
+func selectTheNearestPawn():
+	var status = getPawnStatus()
+	var nearestDistance = 40
+	var nearestPawn = null
+	for pawnId in range(4):
+		if nearestDistance > status[pawnId].y:
+			nearestDistance = status[pawnId].y
+			nearestPawn = pawnId
+	if nearestPawn != null:
+		choosenPawn = nearestPawn
+	else:
+		fallbackToFallbackStrategy("balanced (1)")
+
+func selectTheNearestPawnFromBoard():
+	var status = getPawnStatus()
+	var nearestDistance = 40
+	var nearestPawn = -1
+	for pawnId in range(4):
+		if pawns[pawnId].isPawnOnBoard():
+			if nearestDistance > status[pawnId].y:
+				nearestDistance = status[pawnId].y
+				nearestPawn = pawnId
+	if nearestPawn != -1:
+		choosenPawn = nearestPawn
+	else:
+		fallbackToFallbackStrategy("balanced (1)")
+
+func selectPawnUsingRandomStrategy():
+	printDebug()
+	if board.diceResult == 6 && isAnyPawnOnBoard() && isAnyPawnInHome():
+		var leaveChance = randi() % 2
+		if leaveChance == 0:
+			selectRandomPawnFromHome()
+		else:
+			selectRandomPawnFromBoard()
+	elif board.diceResult == 6 && isAnyPawnInHome():
+		selectRandomPawnFromHome()
+	elif isAnyPawnOnBoard():
+		selectRandomPawnFromBoard()
+	else:
+		fallbackToFallbackStrategy("random (1)")
+
+func selectRandomPawnFromHome():
+	var choosen = randi() % 4 # rand int, range [0, 3]
+	while (not pawns[choosen].isPawnInHome()):
+		choosen = randi() % 4
+	choosenPawn = choosen
+
+func selectRandomPawnFromBoard():
+	var choosen = randi() % 4 # rand int, range [0, 3]
+	while (not pawns[choosen].isPawnOnBoard()):
+		choosen = randi() % 4
+	choosenPawn = choosen
+
+func printDebug(printAnyway = false):
+	if CONSTS.IS_DEBUG or printAnyway:
+		var status = getPawnStatus()
+		print("DEBUG: playerId: " + str(playerId) + "; pawnPositions: 1 - " + str(status[0]) + ", 2 - " + str(status[1]) + ", 3 - " + str(status[2]) + ", 4 - " + str(status[3]))
+		print("DEBUG: selectedPawn: " + str(choosenPawn))

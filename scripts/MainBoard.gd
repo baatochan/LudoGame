@@ -1,6 +1,6 @@
 extends Node2D
 
-var players = [] # array of players (filled during aspawn players)
+var players = [] # array of players (filled during spawn players)
 var playerPositions = [] # array with every 40 positions and values Vector2(playerId, pawnId) or NULL (if position is not occupied)
 
 var GAME_STATE = ENUMS.GAME_STATE.LOADING
@@ -57,7 +57,7 @@ func spawnPlayers():
 		var playerNode = Node.new()
 		playerNode.name = "Player " + str(playerId)
 		playerNode.script = playerScript
-		playerNode.id = playerId
+		playerNode.playerId = playerId
 		playerNode.PLAYER_TYPE = Settings.PLAYERS_SETTINGS[playerId][0]
 		playerNode.PLAYER_STRATEGY = Settings.PLAYERS_SETTINGS[playerId][1]
 		playerNode.alwaysHit = Settings.PLAYERS_SETTINGS[playerId][2]
@@ -76,6 +76,7 @@ func anotherRoll():
 	players[PLAYER_TURN].PLAYER_STATE = ENUMS.PLAYER_STATE.NEW_TURN
 	TURN_STATE = ENUMS.TURN_STATE.ROLLING
 	updateTurnStateLabels()
+	printDebug()
 
 func nextPlayer():
 	players[PLAYER_TURN].PLAYER_STATE = ENUMS.PLAYER_STATE.NEW_TURN
@@ -85,6 +86,7 @@ func nextPlayer():
 		PLAYER_TURN = 0
 	updatePlayerLabel()
 	updateTurnStateLabels()
+	printDebug()
 
 func movePawn(var pawn, var numberToMove = diceResult):
 	var selectedPawn = players[PLAYER_TURN].pawns[pawn]
@@ -118,6 +120,18 @@ func checkIfWinning(var player = PLAYER_TURN):
 	else:
 		return false
 
+func checkIfPositionIsOccupied(position, ally):
+	if position < 0:
+		position += 40
+	if position > 39:
+		position -= 40
+
+	if playerPositions[position] != null:
+		if playerPositions[position].x != ally:
+			return true
+	else:
+		return false
+
 func updatePlayerLabel(var player = PLAYER_TURN):
 	$MainLabelNode/Label.text = "Player " + str(player + 1)
 	$MainLabelNode/Label.add_color_override("font_color", CONSTS.FIELDS_COLORS[player])
@@ -136,3 +150,7 @@ func updateTurnStateLabels(var state = TURN_STATE):
 func setWinningPlayer(var player = PLAYER_TURN):
 	$MainLabelNode/Label.text = "Player " + str(player + 1) + " won!"
 	$MainLabelNode/Label.add_color_override("font_color", CONSTS.FIELDS_COLORS[player])
+
+func printDebug():
+	if CONSTS.IS_DEBUG:
+		print("\n\n")
