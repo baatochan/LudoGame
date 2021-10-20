@@ -171,13 +171,13 @@ func selectPawnUsingSoloStrategy():
 func selectTheFurthestPawn():
 	var status = getPawnStatus()
 	var furthestDistance = -11
-	var furthestPawn = -1
+	var furthestPawn = null
 	for pawnId in range(4):
 		if pawns[pawnId].isPawnOnBoard():
 			if furthestDistance < status[pawnId].y:
 				furthestDistance = status[pawnId].y
 				furthestPawn = pawnId
-	if furthestPawn != -1:
+	if furthestPawn != null:
 		choosenPawn = furthestPawn
 	else:
 		fallbackToFallbackStrategy("solo (2)")
@@ -203,12 +203,12 @@ func selectPawnUsingBalancedStrategy():
 func selectTheNearestPawn():
 	var status = getPawnStatus()
 	var nearestDistance = 40
-	var nearestPawn = -1
+	var nearestPawn = null
 	for pawnId in range(4):
 		if nearestDistance > status[pawnId].y:
 			nearestDistance = status[pawnId].y
 			nearestPawn = pawnId
-	if nearestPawn != -1:
+	if nearestPawn != null:
 		choosenPawn = nearestPawn
 	else:
 		fallbackToFallbackStrategy("balanced (1)")
